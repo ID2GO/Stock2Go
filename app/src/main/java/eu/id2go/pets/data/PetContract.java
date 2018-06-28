@@ -12,6 +12,8 @@ public final class PetContract {
 
     public static abstract class PetsEntry implements BaseColumns {
 
+//        private PetContract() {}
+
         public static final String TABLE_NAME = "pets";
 
         public static final String _ID = BaseColumns._ID;
@@ -28,3 +30,4 @@ public final class PetContract {
         public static final int GENDER_FEMALE = 2;
     }
 }
+
