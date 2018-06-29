@@ -60,10 +60,10 @@ public class PetDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // The database is still @ version 1, so command below is not needed yet
-//        private static final String SQL_DELETE_ENTRIES =
-//                "DROP TABLE IF EXISTS " + TABLE_NAME_ENTRIES;
-//        db.execSQL(SQL_DELETE_ENTRIES);
-//        onCreate(db);
+        String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + PetsEntry.TABLE_NAME;
+
+        db.execSQL(SQL_DELETE_ENTRIES);
+        onCreate(db);
 
     }
 //    This method should be called into action when downgrading the database version
