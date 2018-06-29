@@ -66,6 +66,15 @@ public class CatalogActivity extends AppCompatActivity {
     }
 
     /**
+     * This method is called when user has saved new pet info into database
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displayDatabaseInfo();
+    }
+
+    /**
      * Temporary helper method to display information in the onscreen TextView about the state of
      * the pets database.
      */
@@ -141,3 +150,9 @@ public class CatalogActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+// TODO:
+// 1 Trigger when the Save button is pressed
+// 2 Get all the data from the EditText fields
+// 3 Save this in a ContentValues object
+// 4 Intert the ContentValues into the pets table
+

@@ -110,6 +110,15 @@ public class EditorActivity extends AppCompatActivity {
         });
     }
 
+    private void insertPet() {
+        // To avoid poluted output from string @.trim() to eliminate leading or trailing white space
+        String nameString = mNameEditText.getText().toString().trim();
+//        make new content value object, use key value pair where the key is the name column and the value is the name from the EditText field
+        // converting a string into an integer use integer.parseInt method Integer.parseInt("1") -> 1. This will change strings into integers
+        // Value for gender is stored in mGender
+//        name, breed, gender, weight
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_editor.xml file.
@@ -124,7 +133,13 @@ public class EditorActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                // Do nothing for now
+                // Save entries to database
+                insertPet();
+                // TODO: create Toast message:
+                // "Pet saved with id: ..." if insert successfully saved into the database
+                // "Error with saving pet" if there was an error saving
+                // exit activity
+                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
