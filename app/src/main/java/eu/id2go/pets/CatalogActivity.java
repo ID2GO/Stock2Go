@@ -84,14 +84,62 @@ public class CatalogActivity extends AppCompatActivity {
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        // Perform this raw SQL query "SELECT * FROM pets"
-        // to get a Cursor that contains all rows from the pets table.
-        Cursor cursor = db.rawQuery("SELECT * FROM " + PetsEntry.TABLE_NAME, null);
+        // Define the range of columns from the database to be used
+        String[] projection = {
+                PetsEntry._ID,
+                PetsEntry.COLUMN_NAME,
+                PetsEntry.COLUMN_BREED,
+                PetsEntry.COLUMN_GENDER,
+                PetsEntry.COLUMN_WEIGHT};
+
+        // Perform a query on the pets table
+        Cursor cursor = db.query(
+                PetsEntry.TABLE_NAME,     // The Table of the db to query
+                projection,         // The above range of columns from the db
+                null,       // The column for the WHERE query
+                null,    // The values for the WHERE query
+                null,        // Do not group the rows
+                null,         // Do not filter on row groups
+                null);       // The sorting order
+
+        TextView displayView = findViewById(R.id.text_view_pet);
+
+
         try {
             // Display the number of rows in the Cursor (which reflects the number of rows in the
             // pets table in the database).
-            TextView displayView = findViewById(R.id.text_view_pet);
-            displayView.setText("Number of rows in pets database table: " + cursor.getCount());
+            displayView.setText("The pets table contains: " + cursor.getCount() + " pets.\n\n");
+
+            displayView.append(PetsEntry._ID + " - " +
+                    PetsEntry.COLUMN_NAME + " - " +
+                    PetsEntry.COLUMN_BREED + " - " +
+                    PetsEntry.COLUMN_GENDER + " - " +
+                    PetsEntry.COLUMN_WEIGHT + "\n");
+
+            // Match the index to each column
+            int idColumnIndex = cursor.getColumnIndex(PetsEntry._ID);
+            int nameColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_NAME);
+            int breedColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_BREED);
+            int genderColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_GENDER);
+            int weightColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_WEIGHT);
+
+            // Loop through the returned table rows in the cursor
+            while (cursor.moveToNext()) {
+                // Use defined index to extract the String or Integer values at the current row the cursor is on
+                int currentID = cursor.getInt(idColumnIndex);
+                String currentName = cursor.getString(nameColumnIndex);
+                String currentBreed = cursor.getString(breedColumnIndex);
+                int currentGender = cursor.getInt(genderColumnIndex);
+                int currentWeight = cursor.getInt(weightColumnIndex);
+                // Display the values from each column of the current row in the cursor in the TextView
+                displayView.append(("\n" + currentID + " - " +
+                        currentName + " - " +
+                        currentBreed + " - " +
+                        currentGender + " - " +
+                        currentWeight));
+
+            }
+
         } finally {
             // Always close the cursor when you're done reading from it. This releases all its
             // resources and makes it invalid.
@@ -112,7 +160,7 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetsEntry.COLUMN_NAME, "Toto");
         values.put(PetsEntry.COLUMN_BREED, "Terrier");
         values.put(PetsEntry.COLUMN_GENDER, PetsEntry.GENDER_MALE);
-        values.put(PetsEntry.COLUMN_weight, 7);
+        values.put(PetsEntry.COLUMN_WEIGHT, 7);
         db.insert(PetsEntry.TABLE_NAME, null, values);
 
         // Insert a new row for Toto in the database, returning the ID of that new row.
@@ -150,9 +198,5 @@ public class CatalogActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
-// TODO:
-// 1 Trigger when the Save button is pressed
-// 2 Get all the data from the EditText fields
-// 3 Save this in a ContentValues object
-// 4 Intert the ContentValues into the pets table
+
 

@@ -20,7 +20,7 @@ public final class PetContract {
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_BREED = "breed";
         public static final String COLUMN_GENDER = "gender";
-        public static final String COLUMN_weight = "weight";
+        public static final String COLUMN_WEIGHT = "weight";
 
         /**
          * Possible values for the gender of the pets

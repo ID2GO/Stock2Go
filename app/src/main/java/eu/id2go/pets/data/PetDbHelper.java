@@ -51,7 +51,7 @@ public class PetDbHelper extends SQLiteOpenHelper {
                 + PetsEntry.COLUMN_NAME + " TEXT NOT NULL, "
                 + PetsEntry.COLUMN_BREED + " TEXT, "
                 + PetsEntry.COLUMN_GENDER + " INTEGER NOT NULL, "
-                + PetsEntry.COLUMN_weight + " INTEGER NOT NULL DEFAULT 0);";
+                + PetsEntry.COLUMN_WEIGHT + " INTEGER NOT NULL DEFAULT 0);";
 
         // To execute the SQL statement
         db.execSQL(SQL_CREATE_PETS_TABLE);

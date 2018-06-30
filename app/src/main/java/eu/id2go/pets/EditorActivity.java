@@ -140,7 +140,7 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetsEntry.COLUMN_NAME, nameString);
         values.put(PetsEntry.COLUMN_BREED, breedString);
         values.put(PetsEntry.COLUMN_GENDER, mGender);
-        values.put(PetsEntry.COLUMN_weight, weight);
+        values.put(PetsEntry.COLUMN_WEIGHT, weight);
 
         // Insert a new row in the pets database returning the id of that new row
         long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);
