@@ -16,6 +16,8 @@
 package eu.id2go.pets;
 
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -27,8 +29,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import eu.id2go.pets.data.PetContract.PetsEntry;
+import eu.id2go.pets.data.PetDbHelper;
 
 //import eu.id2go.pets.data.PetContract;
 
@@ -110,13 +114,45 @@ public class EditorActivity extends AppCompatActivity {
         });
     }
 
+    // make new content value object, use key value pair where the key is the name column and the value is the name from the EditText field
+    // converting a string into an integer use integer.parseInt method Integer.parseInt("1") -> 1. This will change strings into integers
+    // Value for gender is stored in mGender
+    // name, breed, gender, weight
+
+    /**
+     * Get user input from editor and save new pet into database.
+     */
     private void insertPet() {
+        // Read input from EditText fields
         // To avoid poluted output from string @.trim() to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
-//        make new content value object, use key value pair where the key is the name column and the value is the name from the EditText field
-        // converting a string into an integer use integer.parseInt method Integer.parseInt("1") -> 1. This will change strings into integers
-        // Value for gender is stored in mGender
-//        name, breed, gender, weight
+        String breedString = mBreedEditText.getText().toString().trim();
+        String weightString = mWeightEditText.getText().toString().trim();
+        int weight = Integer.parseInt(weightString);
+
+        // Creating connection to database using database helper
+        PetDbHelper mDbHelper = new PetDbHelper(this);
+        // Get the database in writing mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        //  Create a ContentValues object using key value pairs where the key is the name column and the value is the name from the EditText field
+        ContentValues values = new ContentValues();
+        values.put(PetsEntry.COLUMN_NAME, nameString);
+        values.put(PetsEntry.COLUMN_BREED, breedString);
+        values.put(PetsEntry.COLUMN_GENDER, mGender);
+        values.put(PetsEntry.COLUMN_weight, weight);
+
+        // Insert a new row in the pets database returning the id of that new row
+        long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);
+
+        // Show a toast message of either success saving or error saving
+        if (newRowId == -1) {
+            // If the row ID is -1, then saving resulted in an error
+            Toast.makeText(this, "Error while saving pet info", Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise saving was successful and a toast displays showing a row ID
+            Toast.makeText(this, "Pet info saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -135,9 +171,6 @@ public class EditorActivity extends AppCompatActivity {
             case R.id.action_save:
                 // Save entries to database
                 insertPet();
-                // TODO: create Toast message:
-                // "Pet saved with id: ..." if insert successfully saved into the database
-                // "Error with saving pet" if there was an error saving
                 // exit activity
                 finish();
                 return true;
