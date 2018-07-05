@@ -60,7 +60,7 @@ public class CatalogActivity extends AppCompatActivity {
         // and pass the context, which is the current activity.
         mDbHelper = new PetDbHelper(this);
 
-        displayDatabaseInfo();
+//        displayDatabaseInfo();
 //        PetDbHelper mDbHelper = new PetDbHelper(this);
 //        SQLiteDatabase db = mDbHelper.getReadableDatabase();
     }
@@ -160,7 +160,7 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetsEntry.COLUMN_BREED, "Terrier");
         values.put(PetsEntry.COLUMN_GENDER, PetsEntry.GENDER_MALE);
         values.put(PetsEntry.COLUMN_WEIGHT, 7);
-        db.insert(PetsEntry.TABLE_NAME, null, values);
+//        db.insert(PetsEntry.TABLE_NAME, null, values);
 
         // Insert a new row for Toto in the database, returning the ID of that new row.
         // The first argument for db.insert() is the pets table name.
