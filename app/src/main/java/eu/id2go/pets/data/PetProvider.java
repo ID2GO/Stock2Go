@@ -73,6 +73,8 @@ public class PetProvider extends ContentProvider {
     }
 
     /**
+     * Retrieve data from your provider. Use the arguments to select the table to query, the rows and
+     * columns to return, and the sort order of the result. Return the data as a Cursor object.
      * Perform the query for the given URI. Use the given projection, selection, selection arguments, and sort order.
      */
     @Override
@@ -106,7 +108,7 @@ public class PetProvider extends ContentProvider {
                         String.valueOf(ContentUris.parseId(uri))
                 };
                 // This will perform a query on the pets table where the _id equals 3 to return a
-                // Cursor containing that row of the table.
+                // Cursor containing the selected row of data of the table.
                 cursor = database.query(PetsEntry.TABLE_NAME, projection, selection,
                         selectionArgs, null, null, sortOrder);
                 break;
@@ -117,7 +119,7 @@ public class PetProvider extends ContentProvider {
     }
 
     /**
-     * Returns the MIME type of data for the content URI.
+     * Returns the MIME type of data corresponding to the content URI.
      */
     @Override
     public String getType(Uri uri) {
@@ -125,7 +127,9 @@ public class PetProvider extends ContentProvider {
     }
 
     /**
-     * Insert new data into the provider with the given ContentValues.
+     * Insert a new row of data into the provider with the given ContentValues.
+     * Use the arguments to select the destination table and to get the column values to use.
+     * Return a content URI for the newly-inserted row.
      */
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
@@ -133,7 +137,9 @@ public class PetProvider extends ContentProvider {
     }
 
     /**
-     * Updates the data at the given selection and selection arguments, with the new ContentValues.
+     * Updates the data of existing rows at the given selection and selection arguments, with the new ContentValues.
+     * Use the arguments to select the table and rows to update and to get the updated column values.
+     * Return the number of rows updated.
      */
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
@@ -141,7 +147,8 @@ public class PetProvider extends ContentProvider {
     }
 
     /**
-     * Delete the data at the given selection and selection arguments.
+     * Delete the rows of data at the given selection and selection arguments.
+     * Use the arguments to select the table and the rows to delete. Return the number of rows deleted.
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {

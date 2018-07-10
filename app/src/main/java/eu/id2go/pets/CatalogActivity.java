@@ -80,9 +80,6 @@ public class CatalogActivity extends AppCompatActivity {
      */
     private void displayDatabaseInfo() {
 
-        // This method is the java equivalent of the sqlite3> .open shelter.db command in the terminal.
-        // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         // Define the range of columns from the database to be used
         String[] projection = {
@@ -93,7 +90,7 @@ public class CatalogActivity extends AppCompatActivity {
                 PetsEntry.COLUMN_WEIGHT};
 
         // Perform a query on the pets table
-        Cursor cursor = db.query(
+        /**      Cursor cursor = db.query(
                 PetsEntry.TABLE_NAME,     // The Table of the db to query
                 projection,         // The above range of columns from the db
                 null,       // The column for the WHERE query
@@ -101,6 +98,14 @@ public class CatalogActivity extends AppCompatActivity {
                 null,        // Do not group the rows
                 null,         // Do not filter on row groups
                 null);       // The sorting order
+         */
+
+        Cursor cursor = getContentResolver().query(
+                PetsEntry.CONTENT_URI,    // The Content URI of the pets Table of the db to query
+                projection,               // The above range of columns to return for each row
+                null,            // The column for the WHERE query
+                null,         // Selection criteria
+                null);           // The sort order for the returned rows
 
         TextView displayView = findViewById(R.id.text_view_pet);
 
