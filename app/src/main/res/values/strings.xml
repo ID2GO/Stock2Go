@@ -19,6 +19,12 @@
 
     <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
     <string name="action_delete_all_entries">Delete All Pets</string>
+    <!--Toast for Editor insert data-->
+    <string name="toast_error_editor_inserting_pet_data">Error while inserting pet info</string>
+    <string name="toast_success_editor_inserting_pet_data">Pet info successfully inserted</string>
+    <!--Toast for dummy data-->
+    <string name="toast_error_inserting_dummy_pet_data">Error while inserting dummy pet info</string>
+    <string name="toast_success_inserting_dummy_pet_data">Dummy pet info successfully inserted</string>
 
     <!-- Title for the activity to add a new pet [CHAR LIMIT=20] -->
     <string name="editor_activity_title_new_pet">Add a Pet</string>

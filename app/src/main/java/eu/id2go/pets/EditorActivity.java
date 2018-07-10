@@ -17,7 +17,7 @@ package eu.id2go.pets;
 
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -32,7 +32,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import eu.id2go.pets.data.PetContract.PetsEntry;
-import eu.id2go.pets.data.PetDbHelper;
 
 //import eu.id2go.pets.data.PetContract;
 
@@ -124,16 +123,13 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void insertPet() {
         // Read input from EditText fields
-        // To avoid poluted output from string @.trim() to eliminate leading or trailing white space
+        // To avoid polluted output from string @.trim() to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
         String breedString = mBreedEditText.getText().toString().trim();
         String weightString = mWeightEditText.getText().toString().trim();
         int weight = Integer.parseInt(weightString);
 
-        // Creating connection to database using database helper
-        PetDbHelper mDbHelper = new PetDbHelper(this);
-        // Get the database in writing mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
 
         //  Create a ContentValues object using key value pairs where the key is the name column and the value is the name from the EditText field
         ContentValues values = new ContentValues();
@@ -143,15 +139,15 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetsEntry.COLUMN_WEIGHT, weight);
 
         // Insert a new row in the pets database returning the id of that new row
-        long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);
+        Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
 
         // Show a toast message of either success saving or error saving
-        if (newRowId == -1) {
+        if (newUri == null) {
             // If the row ID is -1, then saving resulted in an error
-            Toast.makeText(this, "Error while saving pet info", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_error_editor_inserting_pet_data), Toast.LENGTH_SHORT).show();
         } else {
-            // Otherwise saving was successful and a toast displays showing a row ID
-            Toast.makeText(this, "Pet info saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+            // Otherwise saving was successful
+            Toast.makeText(this, getString(R.string.toast_success_editor_inserting_pet_data), Toast.LENGTH_SHORT).show();
         }
     }
 

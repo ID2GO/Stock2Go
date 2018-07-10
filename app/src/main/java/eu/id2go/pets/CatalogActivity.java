@@ -19,7 +19,7 @@ package eu.id2go.pets;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -27,19 +27,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import eu.id2go.pets.data.PetContract.PetsEntry;
-import eu.id2go.pets.data.PetDbHelper;
+
 
 /**
  * Displays list of pets that were entered and stored in the app.
  */
 public class CatalogActivity extends AppCompatActivity {
 
-    /**
-     * Database helper that will provide us access to the database
-     */
-    private PetDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +53,6 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        mDbHelper = new PetDbHelper(this);
-
-//        displayDatabaseInfo();
-//        PetDbHelper mDbHelper = new PetDbHelper(this);
-//        SQLiteDatabase db = mDbHelper.getReadableDatabase();
     }
 
     /**
@@ -89,17 +79,8 @@ public class CatalogActivity extends AppCompatActivity {
                 PetsEntry.COLUMN_GENDER,
                 PetsEntry.COLUMN_WEIGHT};
 
-        // Perform a query on the pets table
-        /**      Cursor cursor = db.query(
-                PetsEntry.TABLE_NAME,     // The Table of the db to query
-                projection,         // The above range of columns from the db
-                null,       // The column for the WHERE query
-                null,    // The values for the WHERE query
-                null,        // Do not group the rows
-                null,         // Do not filter on row groups
-                null);       // The sorting order
-         */
-
+        // Perform a query on the provider using the ContentResolver.
+        // Use the {@link PetEntry#CONTENT_URI} to access the pet data.
         Cursor cursor = getContentResolver().query(
                 PetsEntry.CONTENT_URI,    // The Content URI of the pets Table of the db to query
                 projection,               // The above range of columns to return for each row
@@ -113,6 +94,10 @@ public class CatalogActivity extends AppCompatActivity {
         try {
             // Display the number of rows in the Cursor (which reflects the number of rows in the
             // pets table in the database).
+            // _id - name - breed - gender - weight
+            //
+            // In the while loop below, iterate through the rows of the cursor and display
+            // the information from each column in this order.
             displayView.setText("The pets table contains: " + cursor.getCount() + " pets.\n\n");
 
             displayView.append(PetsEntry._ID + " - " +
@@ -155,8 +140,6 @@ public class CatalogActivity extends AppCompatActivity {
      * Helper method to insert hardcoded pet data into the database. For debugging purposes only.
      */
     private void insertPet() {
-        // Gets the database in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // Create a ContentValues object where column names are the keys,
         // and Toto's pet attributes are the values.
@@ -165,7 +148,6 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetsEntry.COLUMN_BREED, "Terrier");
         values.put(PetsEntry.COLUMN_GENDER, PetsEntry.GENDER_MALE);
         values.put(PetsEntry.COLUMN_WEIGHT, 7);
-//        db.insert(PetsEntry.TABLE_NAME, null, values);
 
         // Insert a new row for Toto in the database, returning the ID of that new row.
         // The first argument for db.insert() is the pets table name.
@@ -174,7 +156,16 @@ public class CatalogActivity extends AppCompatActivity {
         // this is set to "null", then the framework will not insert a row when
         // there are no values).
         // The third argument is the ContentValues object containing the info for Toto.
-        long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values );
+        Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
+
+        // Show a toast message of either success saving or error saving
+        if (newUri == null) {
+            // If the row ID is -1, then saving resulted in an error
+            Toast.makeText(this, getString(R.string.toast_error_inserting_dummy_pet_data), Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise saving was successful and a toast displays showing a row ID
+            Toast.makeText(this, getString(R.string.toast_success_inserting_dummy_pet_data), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
