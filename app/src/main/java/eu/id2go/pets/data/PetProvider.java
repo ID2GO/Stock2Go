@@ -7,6 +7,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import eu.id2go.pets.data.PetContract.PetsEntry;
@@ -149,8 +150,38 @@ public class PetProvider extends ContentProvider {
      * for that specific row in the database.
      */
     private Uri insertPet(Uri uri, ContentValues values) {
+        // Check that the name is not null
+        String name = values.getAsString(PetsEntry.COLUMN_NAME);
+        // check breed is not null
+        String breed = values.getAsString(PetsEntry.COLUMN_BREED);
+        // check gender if it is null or invalid
+        Integer gender = values.getAsInteger(PetsEntry.COLUMN_GENDER);
+        // check weight to be equal or greater than 0 kg
+        Integer weight = values.getAsInteger(PetsEntry.COLUMN_WEIGHT);
 
-        // Get writeable database
+
+        // check name
+        // using TextUtils.isEmpty(name) {} instead of using (name==null || name.isEmpty() ){}
+        // It's faster and will return true if the String is empty or null.
+        if (TextUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("Pet requires a name");
+//            Toast.makeText(this, getString(R.string.toast_insert_pet_name),Toast.LENGTH_SHORT).show();
+        }
+        // check breed
+        if (breed == null || breed.isEmpty()) {
+            throw new IllegalArgumentException("Pet requires valid breed");
+//            Toast.makeText(this, getString(R.string.toast_insert_pet_breed),Toast.LENGTH_SHORT).show();
+        }
+        // check gender with either/or check
+        if (gender == null || !PetsEntry.isValidGender(gender)) {
+            throw new IllegalArgumentException("Pet requires valid gender");
+        }
+        // check weight checking both conditions with &&
+        if (weight != null && weight < 0) {
+            throw new IllegalArgumentException("Pet requires valid weight");
+        }
+
+        // Get writable database
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // Insert the new pet with the given values
@@ -161,12 +192,12 @@ public class PetProvider extends ContentProvider {
 
             return null;
         }
-        // TODO: Insert a new pet into the pets database table with the given ContentValues
 
         // Once we know the ID of the new row in the table,
         // return the new URI with the ID appended to the end of it
         return ContentUris.withAppendedId(uri, newRowId);
     }
+
 
     /**
      * Updates the data of existing rows at the given selection and selection arguments, with the new ContentValues.
