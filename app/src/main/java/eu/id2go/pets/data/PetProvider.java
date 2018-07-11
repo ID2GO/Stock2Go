@@ -160,7 +160,7 @@ public class PetProvider extends ContentProvider {
         Integer weight = values.getAsInteger(PetsEntry.COLUMN_WEIGHT);
 
 
-        // check name
+        // sanity check name
         // using TextUtils.isEmpty(name) {} instead of using (name==null || name.isEmpty() ){}
         // It's faster and will return true if the String is empty or null.
         if (TextUtils.isEmpty(name)) {
@@ -206,8 +206,85 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
-        return 0;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                return updatePet(uri, contentValues, selection, selectionArgs);
+            case PET_ID:
+                // For the PET_ID code, extract out the ID from the URI,
+                // so we know which row to update. Selection will be "_id=?" and selection
+                // arguments will be a String array containing the actual ID.
+                selection = PetsEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updatePet(uri, contentValues, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
     }
+
+    /**
+     * Update pets in the database with the given content values. Apply the changes to the rows
+     * specified in the selection and selection arguments (which could be 0 or 1 or more pets).
+     * Return the number of rows that were successfully updated.
+     */
+    private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        // Check that the name is not null or empty
+        String name = values.getAsString(PetsEntry.COLUMN_NAME);
+        // check breed is not null or empty
+        String breed = values.getAsString(PetsEntry.COLUMN_BREED);
+        // check gender if it is null or invalid
+        Integer gender = values.getAsInteger(PetsEntry.COLUMN_GENDER);
+        // check weight to be equal or greater than 0 kg
+        Integer weight = values.getAsInteger(PetsEntry.COLUMN_WEIGHT);
+
+        // If the {@link PetsEntry#COLUMN_NAME} key is present,
+        // check that the name value is not null or empty.
+        if (values.containsKey(PetsEntry.COLUMN_NAME)) {
+            // sanity check name
+            // using TextUtils.isEmpty(name) {} instead of using (name==null || name.isEmpty() ){}
+            // It's faster and will return true if the String is empty or null.
+            if (TextUtils.isEmpty(name)) {
+                throw new IllegalArgumentException("Pet requires a name");
+//            Toast.makeText(this, getString(R.string.toast_insert_pet_name),Toast.LENGTH_SHORT).show();
+            }
+        }
+        // If the {@link PetsEntry#COLUMN_BREED} key is present,
+        // check that the breed value is not null or empty.
+        if (values.containsKey(PetsEntry.COLUMN_BREED)) {
+            // sanity check breed
+            if (breed == null || breed.isEmpty()) {
+                throw new IllegalArgumentException("Pet requires valid breed");
+//            Toast.makeText(this, getString(R.string.toast_insert_pet_breed),Toast.LENGTH_SHORT).show();
+            }
+        }
+        // If the {@link PetsEntry#COLUMN_GENDER} key is present,
+        // check that the gender value is not null or !PetsEntry.isValidGender
+        if (values.containsKey(PetsEntry.COLUMN_GENDER)) {
+            // sanity check gender with either/or check
+            if (gender == null || !PetsEntry.isValidGender(gender)) {
+                throw new IllegalArgumentException("Pet requires valid gender");
+            }
+        }
+        // If the {@link PetsEntry#COLUMN_WEIGHT} key is present,
+        // check that the weight value is not null && weight < 0
+        if (values.containsKey(PetsEntry.COLUMN_WEIGHT)) {
+            // sanity check weight checking both conditions with &&
+            if (weight != null && weight < 0) {
+                throw new IllegalArgumentException("Pet requires valid weight");
+            }
+        }
+        // If there are no values to update, then don't try to update the database
+        if (values.size() == 0) {
+            return 0;
+        }
+
+        // Otherwise get database in writing mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Returns the number of database rows affected by the update statement
+        return db.update(PetsEntry.TABLE_NAME, values, selection, selectionArgs);
+    }
+
 
     /**
      * Delete the rows of data at the given selection and selection arguments.
@@ -215,7 +292,24 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+
+        // Get writable database
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                // Delete all rows that match the selection and selection args
+                return database.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
+            case PET_ID:
+                // Delete a single row given by the ID in the URI
+                selection = PetsEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return database.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
+
     }
 
 
