@@ -26,7 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import eu.id2go.pets.data.PetContract.PetsEntry;
@@ -88,52 +88,12 @@ public class CatalogActivity extends AppCompatActivity {
                 null,         // Selection criteria
                 null);           // The sort order for the returned rows
 
-        TextView displayView = findViewById(R.id.text_view_pet);
+        ListView petListView = findViewById(R.id.list);
 
-
-        try {
-            // Display the number of rows in the Cursor (which reflects the number of rows in the
-            // pets table in the database).
-            // _id - name - breed - gender - weight
-            //
-            // In the while loop below, iterate through the rows of the cursor and display
-            // the information from each column in this order.
-            displayView.setText("The pets table contains: " + cursor.getCount() + " pets.\n\n");
-
-            displayView.append(PetsEntry._ID + " - " +
-                    PetsEntry.COLUMN_NAME + " - " +
-                    PetsEntry.COLUMN_BREED + " - " +
-                    PetsEntry.COLUMN_GENDER + " - " +
-                    PetsEntry.COLUMN_WEIGHT + "\n");
-
-            // Match the index to each column
-            int idColumnIndex = cursor.getColumnIndex(PetsEntry._ID);
-            int nameColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_NAME);
-            int breedColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_BREED);
-            int genderColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_GENDER);
-            int weightColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_WEIGHT);
-
-            // Loop through the returned table rows in the cursor
-            while (cursor.moveToNext()) {
-                // Use defined index to extract the String or Integer values at the current row the cursor is on
-                int currentID = cursor.getInt(idColumnIndex);
-                String currentName = cursor.getString(nameColumnIndex);
-                String currentBreed = cursor.getString(breedColumnIndex);
-                int currentGender = cursor.getInt(genderColumnIndex);
-                int currentWeight = cursor.getInt(weightColumnIndex);
-                // Display the values from each column of the current row in the cursor in the TextView
-                displayView.append(("\n" + currentID + " - " +
-                        currentName + " - " +
-                        currentBreed + " - " +
-                        currentGender + " - " +
-                        currentWeight));
-
-            }
-        } finally {
-            // Always close the cursor when you're done reading from it. This releases all its
-            // resources and makes it invalid.
-            cursor.close();
-        }
+        // Setup an Adapter to create a list item for each row of pet data in the Cursor.
+        PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
+        // Attach the adapter to the ListView.
+        petListView.setAdapter(adapter);
     }
 
     /**
@@ -161,10 +121,10 @@ public class CatalogActivity extends AppCompatActivity {
         // Show a toast message of either success saving or error saving
         if (newUri == null) {
             // If the row ID is -1, then saving resulted in an error
-            Toast.makeText(this, getString(R.string.toast_error_inserting_dummy_pet_data), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_error_inserting_dummy_pet_data), Toast.LENGTH_LONG).show();
         } else {
             // Otherwise saving was successful and a toast displays showing a row ID
-            Toast.makeText(this, getString(R.string.toast_success_inserting_dummy_pet_data), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_success_inserting_dummy_pet_data), Toast.LENGTH_LONG).show();
         }
     }
 

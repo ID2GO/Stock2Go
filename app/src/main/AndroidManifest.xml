@@ -23,8 +23,9 @@
         <activity
             android:name=".EditorActivity"
             android:label="@string/editor_activity_title_new_pet"
-            android:theme="@style/EditorTheme"
-            android:parentActivityName=".CatalogActivity" >
+            android:parentActivityName=".CatalogActivity"
+            android:theme="@style/EditorTheme">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -35,6 +36,8 @@
             android:name=".data.PetProvider"
             android:authorities="eu.id2go.pets"
             android:exported="false" />
+
+        <!--<activity android:name=".PetCursorAdapter"></activity>-->
     </application>
 
 </manifest>
