@@ -12,6 +12,9 @@ import android.util.Log;
 
 import eu.id2go.pets.data.PetContract.PetsEntry;
 
+import static eu.id2go.pets.data.PetContract.CONTENT_AUTHORITY;
+import static eu.id2go.pets.data.PetContract.PATH_PETS;
+
 /**
  * {@link ContentProvider} for Pets app.
  */
@@ -48,12 +51,12 @@ public class PetProvider extends ContentProvider {
         // The calls to addURI() go here, for all of the content URI patterns that the provider
         // should recognize. All paths added to the UriMatcher have a corresponding code to return
         // when a match is found.
-        sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS, PETS); // sUriMatcher.addURI("pets", "pets", PETS);
-        sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS + "/#", PET_ID); // sUriMatcher.addURI("pets", "pets/#", PET_ID);
-//        sUriMatcher.addURI("pets", "pets/#", PET_NAME);     // sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS +"/#", PET_NAME);
-//        sUriMatcher.addURI("pets", "pets/#", PET_BREED);    // sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS +"/#", PET_BREED);
-//        sUriMatcher.addURI("pets", "pets/#", PET_GENDER);   // sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS +"/#", PET_GENDER);
-//        sUriMatcher.addURI("pets", "pets/#", PET_WEIGHT);   // sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS +"/#", PET_WEIGHT);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_PETS, PETS); // Alternative but less nice because of hard coded ContentAuthority & path: sUriMatcher.addURI("eu.id2go.pets", "pets", PETS);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_PETS + "/#", PET_ID); // Alternative but less nice because of hard coded ContentAuthority & path: sUriMatcher.addURI("eu.id2go.pets", "pets/#", PET_ID);
+//      sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS +"/#", PET_NAME);   // Alternative but less nice because of hard coded ContentAuthority & path: sUriMatcher.addURI("eu.id2go.pets", "pets/#", PET_NAME);
+//      sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS +"/#", PET_BREED);  //Alternative but less nice because of hard coded ContentAuthority & path: sUriMatcher.addURI("eu.id2go.pets", "pets/#", PET_BREED);
+//      sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS +"/#", PET_GENDER); //Alternative but less nice because of hard coded ContentAuthority & path: sUriMatcher.addURI("eu.id2go.pets", "pets/#", PET_GENDER);
+//      sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS +"/#", PET_WEIGHT); //Alternative but less nice because of hard coded ContentAuthority & path: sUriMatcher.addURI("eu.id2go.pets", "pets/#", PET_WEIGHT);
 
     }
 
@@ -117,6 +120,10 @@ public class PetProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
+        // Set notification URI on the Cursor, so we know what content URI the Cursor was created for.
+        // If the data at this URI changes, then we know we need to update the Cursor.
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        // Return the cursor
         return cursor;
     }
 
@@ -172,13 +179,14 @@ public class PetProvider extends ContentProvider {
         // using TextUtils.isEmpty(name) {} instead of using (name==null || name.isEmpty() ){}
         // It's faster and will return true if the String is empty or null.
         if (TextUtils.isEmpty(name)) {
+//            Toast.makeText(getContext(), (R.string.toast_insert_pet_name),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Pet requires a name");
-//            Toast.makeText(this, getString(R.string.toast_insert_pet_name),Toast.LENGTH_SHORT).show();
         }
         // check breed
         if (breed == null || breed.isEmpty()) {
+//            Toast.makeText(getContext(), (R.string.toast_insert_pet_breed),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Pet requires valid breed");
-//            Toast.makeText(this, getString(R.string.toast_insert_pet_breed),Toast.LENGTH_SHORT).show();
+
         }
         // check gender with either/or check
         if (gender == null || !PetsEntry.isValidGender(gender)) {
@@ -200,6 +208,10 @@ public class PetProvider extends ContentProvider {
 
             return null;
         }
+
+        // Notify all listeners that the data has changed for the pet content URI
+        // uri: content://eu.id2go.pets/pets
+        getContext().getContentResolver().notifyChange(uri, null);
 
         // Once we know the ID of the new row in the table,
         // return the new URI with the ID appended to the end of it
@@ -286,11 +298,22 @@ public class PetProvider extends ContentProvider {
             return 0;
         }
 
+
         // Otherwise get database in writing mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        // Returns the number of database rows affected by the update statement
-        return db.update(PetsEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // Perform the update on the database and get the number of rows affected
+        int rowsUpdated = db.update(PetsEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // If 1 or more rows were updated, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows updated
+        return rowsUpdated;
     }
 
 
@@ -302,23 +325,36 @@ public class PetProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
 
         // Get writable database
-        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Track the number of rows that were deleted
+        int rowsDeleted;
 
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PETS:
-                // Delete all rows that match the selection and selection args
-                return database.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
+                // Delete all rows that match the selection and selection args for case Pets
+                rowsDeleted = db.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             case PET_ID:
                 // Delete a single row given by the ID in the URI
                 selection = PetsEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return database.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
+
+                rowsDeleted = db.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
 
+        // If 1 or more rows were deleted, then notify all listeners that the data at the given URI has changed.
+        if (rowsDeleted != 0) {
+
+            // Notify all listeners that the data has changed for the pet content URI
+            // uri: content://eu.id2go.pets/pets
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows deleted
+        return rowsDeleted;
     }
-
-
 }
