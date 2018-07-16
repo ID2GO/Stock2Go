@@ -17,6 +17,7 @@
 package eu.id2go.pets;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -72,11 +74,33 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         mCursorAdapter = new PetCursorAdapter(this, null);
         petListView.setAdapter(mCursorAdapter);
 
+        // Setup item click listener
+        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Create new intent to go to {@link EditorActivity}
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+
+                // The ContentUris.withAppendedId method forms the content URI to represent the specific
+                // pet that was clicked on, by appending the "id" to it (id passed as input to this method) onto the
+                // {@link PetsEntry#CONTENT_URI}
+                // Example URI: content://eu.id2go.pets/pets/<Pet_ID> // Instead of: URI: content://com.example.android.pets/pets/<Pet_ID>
+                // if the pet with ID was clicked on
+                Uri currentPetUri = ContentUris.withAppendedId(PetsEntry.CONTENT_URI, id);
+
+                // Set the URI on the data field of the intent
+                intent.setData(currentPetUri);
+
+                // Launch the {@link EditorActivity} to display the data for the current pet.
+                startActivity(intent);
+            }
+        });
         /*
          * Initializes the CursorLoader. The PET_Loader value is eventually passed to onCreateLoader().
          */
         getLoaderManager().initLoader(PET_LOADER, null, this);
     }
+
 
 
     /**
@@ -144,7 +168,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        //        // Define the range of columns from the database to be used
+        // Define the range of columns from the database to be used
         String[] projection = {
                 PetsEntry._ID,
                 PetsEntry.COLUMN_NAME,
@@ -165,14 +189,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     /**
      * Called when a previously created loader has finished its load.
-     * <p>
+     *
      * This function is guaranteed to be called prior to the release of
      * the last data that was supplied for this Loader.  At this point
      * you should remove all use of the old data (since it will be released
      * soon), but should not do your own release of the data since its Loader
      * owns it and will take care of that.  The Loader will take care of
      * management of its data so you don't have to.  In particular:
-     * <p>
+     *
      * The Loader will monitor for changes to the data, and report
      * them to you through new calls here.  You should not monitor the
      * data yourself.  For example, if the data is a {@link Cursor}

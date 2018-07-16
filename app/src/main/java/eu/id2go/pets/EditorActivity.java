@@ -15,8 +15,11 @@
  */
 package eu.id2go.pets;
 
-
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -27,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -38,7 +42,20 @@ import eu.id2go.pets.data.PetContract.PetsEntry;
 /**
  * Allows user to create a new pet or edit an existing one.
  */
-public class EditorActivity extends AppCompatActivity {
+public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    /**
+     * Identifier for the pet data loader
+     */
+    private static final int EXISTING_PET_LOADER = 0;
+
+    /**
+     * Instance variable
+     * Content URI for the existing pet loader
+     */
+    private Uri mCurrentPetUri;
+
+
 
     /** EditText field to enter the pet's name */
     private EditText mNameEditText;
@@ -62,6 +79,26 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
+        // Examine the intent that was used to launch this activity in order to determine if we are
+        // creating a new pet or if we are editing an existing one.
+        // Use getIntent() and getData() to get the associated URI
+        Intent intent = getIntent();
+        mCurrentPetUri = intent.getData();
+
+        // If the intent does not contain a pet URI, then we know that we are creating a new pet.
+        // Set title of EditorActivity on which situation we have
+        // if the EditorActivity was opened using the ListView item, then we will
+        // have a uri of the pet to edit to change the app bar to say "Edit Pet"
+        // Otherwise this is a new pet, the uri is null and so the app bar should change to say "Add a Pet"
+        if (mCurrentPetUri == null) {
+            setTitle(getString(R.string.editor_activity_title_new_pet));
+        } else {
+            setTitle(getString(R.string.editor_activity_title_edit_existing_pet));
+        }
+
+        // Initialize a loader to read the pet data from the database & display current values in editor
+        getLoaderManager().initLoader(EXISTING_PET_LOADER, null, this);
 
         // Find all relevant views that we will need to read user input from
         mNameEditText = findViewById(R.id.edit_pet_name);
@@ -94,7 +131,7 @@ public class EditorActivity extends AppCompatActivity {
                 String selection = (String) parent.getItemAtPosition(position);
                 if (!TextUtils.isEmpty(selection)) {
                     // Here make reference to OuterClassContract.InnerClassEntry.CONSTANT (BlankContract.BlankEntry.CONSTANT)
-                    // Due to importstatement OuterClassContract.InnerClassEntry the outerclass PetContract. can be omitted
+                    // Due to import statement OuterClassContract.InnerClassEntry the outerclass PetContract. can be omitted
                     if (selection.equals(getString(R.string.gender_male))) {
                         mGender = PetsEntry.GENDER_MALE; // Male
                     } else if (selection.equals(getString(R.string.gender_female))) {
@@ -181,5 +218,126 @@ public class EditorActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * Instantiate and return a new Loader for the given ID.
+     *
+     * @param id   The ID whose loader is to be created.
+     * @param args Any arguments supplied by the caller.
+     * @return Return a new Loader instance that is ready to start loading.
+     */
+    @Override
+    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // Define the range of columns from the database to be used
+        String[] projection = {
+                PetsEntry._ID,
+                PetsEntry.COLUMN_NAME,
+                PetsEntry.COLUMN_BREED,
+                PetsEntry.COLUMN_GENDER,
+                PetsEntry.COLUMN_WEIGHT};
+
+        // Perform a query on the provider using the ContentResolver.
+        // Use the {@link PetEntry#CONTENT_URI} to access the pet data.
+        return new CursorLoader(this,
+                mCurrentPetUri,    // The Content URI of the pets Table of the db to query
+                projection,               // The above range of columns to return for each row
+                null,            // The column for the WHERE query
+                null,         // Selection criteria
+                null);           // The sort order for the returned rows
+    }
+
+    /**
+     * Called when a previously created loader has finished its load.
+     * <p>This function is guaranteed to be called prior to the release of
+     * the last data that was supplied for this Loader.  At this point
+     * you should remove all use of the old data (since it will be released
+     * soon), but should not do your own release of the data since its Loader
+     * owns it and will take care of that.  The Loader will take care of
+     * management of its data so you don't have to.  In particular:
+     * <p>
+     * <ul>
+     * <li> <p>The Loader will monitor for changes to the data, and report
+     * them to you through new calls here.  You should not monitor the
+     * data yourself.  For example, if the data is a {@link Cursor}
+     * and you place it in a {@link CursorAdapter}, use
+     * the {@link CursorAdapter#CursorAdapter (Context, * Cursor, int)} constructor <em>without</em> passing
+     * in either {@link CursorAdapter#FLAG_AUTO_REQUERY}
+     * or {@link CursorAdapter#FLAG_REGISTER_CONTENT_OBSERVER}
+     * (that is, use 0 for the flags argument).  This prevents the CursorAdapter
+     * from doing its own observing of the Cursor, which is not needed since
+     * when a change happens you will get a new Cursor throw another call
+     * here.
+     * <li> The Loader will release the data once it knows the application
+     * is no longer using it.  For example, if the data is
+     * a {@link Cursor} from a {@link CursorLoader},
+     * you should not call close() on it yourself.  If the Cursor is being placed in a
+     * {@link CursorAdapter}, you should use the
+     * {@link CursorAdapter#swapCursor(Cursor)}
+     * method so that the old Cursor is not closed.
+     * </ul>
+     *
+     * @param loader The Loader that has finished.
+     * @param cursor The data generated by the Loader.
+     */
+    @Override
+    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor cursor) {
+        // Exit early if the cursor == null or there is < 1 row
+        if (cursor == null || cursor.getCount() < 1) {
+            return;
+        }
+
+        // Proceed moving to the first row of the cursor & reading its data
+        // (This should be the only row in the cursor)
+        if (cursor.moveToFirst()) {
+            // Find the columns of the pet table attributes (the header)
+            int nameColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_NAME);
+            int breedColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_BREED);
+            int genderColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_GENDER);
+            int weightColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_WEIGHT);
+
+            // Extract out the value from the Cursor for the given column index
+            String name = cursor.getString(nameColumnIndex);
+            String breed = cursor.getString(breedColumnIndex);
+            int gender = cursor.getInt(genderColumnIndex);
+            int weight = cursor.getInt(weightColumnIndex);
+
+            mNameEditText.setText(name);
+            mBreedEditText.setText(breed);
+            mWeightEditText.setText(Integer.toString(weight));
+
+            // Gender is a dropdown spinner, so ma the constant value from the database
+            // into one of the dropdown options (0 == Unknown, 1 == Male, 2 == Female).
+            // Then call setSelection() so that option is displayed on screen as the current selection.
+            switch (gender) {
+
+                case PetsEntry.GENDER_MALE:
+                    mGenderSpinner.setSelection(1);
+                    break;
+                case PetsEntry.GENDER_FEMALE:
+                    mGenderSpinner.setSelection(2);
+                default: // This is the situation that the spinner is in by default
+                    mGenderSpinner.setSelection(0);
+                    break;
+
+            }
+        }
+    }
+
+    /**
+     * Called when a previously created loader is being reset, and thus
+     * making its data unavailable.  The application should at this point
+     * remove any references it has to the Loader's data.
+     *
+     * @param loader The Loader that is being reset.
+     */
+    @Override
+    public void onLoaderReset(android.content.Loader<Cursor> loader) {
+        // If the loader is invalidated, clear out all the data from the input fields.
+        mNameEditText.setText("");
+        mBreedEditText.setText("");
+        mWeightEditText.setText("");
+        mGenderSpinner.setSelection(0); // By default, set gender to "Unknown"
     }
 }
