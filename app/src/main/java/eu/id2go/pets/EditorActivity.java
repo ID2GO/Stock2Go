@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -40,6 +41,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import eu.id2go.pets.data.PetContract.PetsEntry;
+
+import static eu.id2go.pets.data.PetProvider.LOG_TAG;
 
 //import eu.id2go.pets.data.PetContract;
 
@@ -268,6 +271,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        // If this is a new pet, hide the "Delete" menu item.
+        if (mCurrentPetUri == null) {
+            Log.e(LOG_TAG, "onPrepareOptionsMenu setting delete button visibility false");
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -302,10 +316,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // User clicked "Discard" button, navigate to parent activity.
                                 NavUtils.navigateUpFromSameTask(EditorActivity.this);
+
                             }
                         };
                 // Show a dialog that notifies the user they have unsaved changes
                 showUnsavedChangesDialog(discardButtonClickListener);
+                Log.e(LOG_TAG, "Warning unsaved changes to be discarded");
+
                 return true;
         }
 
