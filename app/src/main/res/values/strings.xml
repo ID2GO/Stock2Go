@@ -15,7 +15,7 @@
 
     <!-- Empty_View -->
     <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
-    <string name="empty_view_title_text">It\'s a bit lonely here...</string>
+    <string name="empty_view_title_text">It\'s a bit lonely here ...., &#8230;</string>
     <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Get started by adding a pet</string>
 
@@ -25,9 +25,26 @@
 
     <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
     <string name="action_delete_all_entries">Delete All Pets</string>
+
+    <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+
+    <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
+    <string name="discard">Discard</string>
+
+    <!-- Dialog button text for the option to keep editing the current pet [CHAR LIMIT=20] -->
+    <string name="keep_editing">Keep Editing</string>
+
+
     <!--Toast for Editor insert data-->
+    <string name="toast_error_editor_empty_fields">Please fill all fields with pet info</string>
     <string name="toast_error_editor_inserting_pet_data">Error while inserting pet info</string>
     <string name="toast_success_editor_inserting_pet_data">Pet info successfully inserted</string>
+
+    <!--Toast for Editor insert data-->
+    <string name="toast_error_editor_updating_pet_data">Error while updating pet info</string>
+    <string name="toast_success_editor_updating_pet_data">Pet info successfully updated</string>
+
     <!--Toast for dummy data-->
     <string name="toast_error_inserting_dummy_pet_data">Error while inserting dummy pet info</string>
     <string name="toast_success_inserting_dummy_pet_data">Dummy pet info successfully inserted</string>
@@ -76,4 +93,7 @@
 
     <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
     <string name="gender_female">Female</string>
+
+    <!-- Label for the pet's breed if the breed is unknown [CHAR LIMIT=20] -->
+    <string name="unknown_breed">Unknown breed</string>
 </resources>
