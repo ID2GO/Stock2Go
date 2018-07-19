@@ -9,7 +9,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Name for the application [CHAR LIMIT=12] -->
     <string name="app_name">Pets</string>
 
@@ -19,13 +19,26 @@
     <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Get started by adding a pet</string>
 
-
+    <!-- CatalogAction menu Dummy data & Delete all pets-->
     <!-- Label for overflow menu option that inserts fake pet data into the app [CHAR LIMIT=20] -->
     <string name="action_insert_dummy_data">Insert Dummy Data</string>
 
     <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
     <string name="action_delete_all_entries">Delete All Pets</string>
 
+    <!-- Log messages for testing purposes in dev. mode-->
+    <string name="log_prepared_options_menu">onPrepareOptionsMenu setting delete button visibility false</string>
+    <string name="log_unsaved_changes_dialog">Warning unsaved changes to be discarded</string>
+    <string name="error_inserting_new_row">Failed to insert row for: <xliff:g exemple="4" id="pets_in_table_of_contents"> </xliff:g> </string>
+
+
+    <!-- Error deleting Table from database-->
+    <string name="error_deleting_all_entries">Error deleting rows in Pets Table: <xliff:g exemple="4" id="pets_in_table_of_contents"> </xliff:g> </string>
+    <!-- Toast message confirming # pet rowsDeleted [CHAR LIMIT=20] -->
+    <!--<string name="confirmation_deletion_all_entries">rows in Pets Table deleted </string>-->
+    <string name="confirmation_deletion_all_entries">Rows in Pets Table deleted: <xliff:g exemple="4" id="pets_in_table_of_contents"> </xliff:g> </string>
+
+    <!-- EditorActivity strings in case of leaving activity -->
     <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
 
@@ -41,7 +54,7 @@
     <string name="toast_error_editor_inserting_pet_data">Error while inserting pet info</string>
     <string name="toast_success_editor_inserting_pet_data">Pet info successfully inserted</string>
 
-    <!--Toast for Editor insert data-->
+    <!--Toast for Editor updating data-->
     <string name="toast_error_editor_updating_pet_data">Error while updating pet info</string>
     <string name="toast_success_editor_updating_pet_data">Pet info successfully updated</string>
 
@@ -63,6 +76,24 @@
 
     <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
+
+
+    <!-- Delete Dialog in EditorActivity -->
+    <!-- Toast message in editor when current pet was successfully deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_pet_successful">Pet deleted</string>
+
+    <!-- Toast message in editor when current pet has failed to be deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_pet_failed">Error with deleting pet</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current pet [CHAR LIMIT=NONE] -->
+    <string name="delete_dialog_msg">Delete this pet?</string>
+
+    <!-- Dialog button text for the option to confirm deleting the current pet [CHAR LIMIT=20] -->
+    <string name="delete">Delete</string>
+
+    <!-- Dialog button text for the option to cancel deletion of the current pet [CHAR LIMIT=20] -->
+    <string name="cancel">Cancel</string>
+
 
     <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
     <string name="category_overview">Overview</string>
