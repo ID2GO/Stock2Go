@@ -37,7 +37,7 @@ public class StockDbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Because of subClassing the abstract classe (SQLiteOpenHelper) we need to implement the (onCreate() method & onUpgrade() method
+     * Because of subClassing the abstract class (SQLiteOpenHelper) we need to implement the (onCreate() method & onUpgrade() method
      *
      * @param @{onCreate()}  method - this method is for when the database is first created
      * @param @{onUpgrade()} method - this method is for when the database schema of the database changes (ex: adding a different column)
@@ -49,7 +49,11 @@ public class StockDbHelper extends SQLiteOpenHelper {
         String SQL_CREATE_STOCK_TABLE = "CREATE TABLE " + StockItemEntry.TABLE_NAME + "("
                 + StockItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + StockItemEntry.COLUMN_NAME + " TEXT NOT NULL, "
-                + StockItemEntry.COLUMN_BRAND + " TEXT, "
+                + StockItemEntry.COLUMN_BRAND + " TEXT NOT NULL, "
+                + StockItemEntry.COLUMN_STOCK_QTY + " INTEGER NOT NULL, "
+                + StockItemEntry.COLUMN_NAME_SUPPLIER + " TEXT, "
+                + StockItemEntry.COLUMN_PHONE_SUPPLIER + " INTEGER NOT NULL, "
+                + StockItemEntry.COLUMN_EMAIL_SUPPLIER + " TEXT NOT NULL, "
                 + StockItemEntry.COLUMN_SECTION + " INTEGER NOT NULL, "
                 + StockItemEntry.COLUMN_PRICE + " INTEGER NOT NULL DEFAULT 0);";
 

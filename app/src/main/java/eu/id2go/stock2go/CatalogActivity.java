@@ -111,10 +111,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // Create a ContentValues object where column names are the keys,
         // and Toto's stockItem attributes are the values.
         ContentValues values = new ContentValues();
-        values.put(StockItemEntry.COLUMN_NAME, "Toto");
-        values.put(StockItemEntry.COLUMN_BRAND, "Terrier");
-        values.put(StockItemEntry.COLUMN_SECTION, StockItemEntry.SECTION_FRUIT);
-        values.put(StockItemEntry.COLUMN_PRICE, 7);
+        values.put(StockItemEntry.COLUMN_NAME, "Knife");
+        values.put(StockItemEntry.COLUMN_BRAND, "Gero Young");
+        values.put(StockItemEntry.COLUMN_STOCK_QTY, 15);
+        values.put(StockItemEntry.COLUMN_NAME_SUPPLIER, "Gero");
+        values.put(StockItemEntry.COLUMN_PHONE_SUPPLIER, 650620159);
+        values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, "info@gero.nl");
+        values.put(StockItemEntry.COLUMN_SECTION, StockItemEntry.SECTION_KITCHEN_UTENSILS);
+        values.put(StockItemEntry.COLUMN_PRICE, 17);
 
         // Insert a new row for Toto in the database, returning the ID of that new row.
         // The first argument for db.insert() is the stock2go table name.
@@ -193,6 +197,10 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 StockItemEntry._ID,
                 StockItemEntry.COLUMN_NAME,
                 StockItemEntry.COLUMN_BRAND,
+                StockItemEntry.COLUMN_STOCK_QTY,
+                StockItemEntry.COLUMN_NAME_SUPPLIER,
+                StockItemEntry.COLUMN_PHONE_SUPPLIER,
+                StockItemEntry.COLUMN_EMAIL_SUPPLIER,
                 StockItemEntry.COLUMN_SECTION,
                 StockItemEntry.COLUMN_PRICE};
 

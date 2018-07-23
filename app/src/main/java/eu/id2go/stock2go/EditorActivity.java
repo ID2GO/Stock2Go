@@ -56,6 +56,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private static final int EXISTING_STOCK_LOADER = 0;
 
+//    name, brand, in stock, supplier, phone, e-mail, section, price
+
     /**
      * Instance variable
      * Content URI for the existing stock item loader
@@ -73,9 +75,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mBrandEditText;
 
     /**
-     * EditText field to enter the stock item price
+     * EditText field to enter the stock item Qty in stock
      */
-    private EditText mPriceEditText;
+    private EditText mStockQtyEditText;
+
+    /**
+     * EditText field to enter the Name of the Supplier
+     */
+    private EditText mNameSupplierEditText;
+
+    /**
+     * EditText field to enter the phone number of the Supplier
+     */
+    private EditText mPhoneSupplierEditText;
+
+    /**
+     * EditText field to enter the e-mail address of the Supplier
+     */
+    private EditText mEmailSupplierEditText;
 
     /**
      * EditText field to enter the stock item section
@@ -83,8 +100,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Spinner mSectionSpinner;
 
     /**
+     * EditText field to enter the stock item price
+     */
+    private EditText mPriceEditText;
+    /**
      * Section of the stock item. The possible valid values are in the StockContract.java file:
-     * {@link StockItemEntry#SECTION_UNKNOWN}, {@link StockItemEntry#SECTION_FRUIT}, or
+     * {@link StockItemEntry#SECTION_UNKNOWN}, {@link StockItemEntry#SECTION_FRUIT}, etc. or
      * {@link StockItemEntry#SECTION_VEGETABLES}.
      */
     private int mSection = StockItemEntry.SECTION_UNKNOWN;
@@ -136,15 +157,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             getLoaderManager().initLoader(EXISTING_STOCK_LOADER, null, this);
         }
 
+
         // Find all relevant views that we will need to read user input from
         mNameEditText = findViewById(R.id.edit_stock_item_name);
         mBrandEditText = findViewById(R.id.edit_stock_item_brand);
+        mStockQtyEditText = findViewById(R.id.edit_stock_item_Qty);
+        mNameSupplierEditText = findViewById(R.id.edit_stock_item_Supplier);
+        mPhoneSupplierEditText = findViewById(R.id.edit_stock_item_supplier_phone);
+        mEmailSupplierEditText = findViewById(R.id.edit_stock_item_supplier_email);
         mPriceEditText = findViewById(R.id.edit_stock_item_price);
         mSectionSpinner = findViewById(R.id.spinner_section);
 
         // Checking on changes in edit fields to avoid data loss by accidental closing
         mNameEditText.setOnTouchListener(mTouchListener);
         mBrandEditText.setOnTouchListener(mTouchListener);
+        mStockQtyEditText.setOnTouchListener(mTouchListener);
+        mNameSupplierEditText.setOnTouchListener(mTouchListener);
+        mPhoneSupplierEditText.setOnTouchListener(mTouchListener);
+        mEmailSupplierEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mSectionSpinner.setOnTouchListener(mTouchListener);
 
@@ -175,7 +205,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 if (!TextUtils.isEmpty(selection)) {
                     // Here make reference to OuterClassContract.InnerClassEntry.CONSTANT (BlankContract.BlankEntry.CONSTANT)
                     // Due to import statement OuterClassContract.InnerClassEntry the outerclass StockContract. can be omitted
-//                    (unknown, bread, cleaning materials, cosmetics, dairy products, dressings and sauces, electrical, frozen food, fruit, kitchen utensils, vegetables)
+                    // (unknown, bread, cleaning materials, cosmetics, dairy products, dressings and
+                    // sauces, electrical, frozen food, fruit, kitchen utensils, vegetables)
                     if (selection.equals(getString(R.string.section_bread))) {
                         mSection = StockItemEntry.SECTION_BREAD; // BREAD
                     } else if (selection.equals(getString(R.string.section_cleaning))) {
@@ -222,8 +253,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // Read input from EditText fields
         // To avoid polluted output from string use trim() to eliminate leading or trailing white space
+
         String nameString = mNameEditText.getText().toString().trim();
         String brandString = mBrandEditText.getText().toString().trim();
+        String stockQtyString = mStockQtyEditText.getText().toString().trim();
+        String nameSupplier = mNameSupplierEditText.getText().toString().trim();
+        String phoneSupplier = mPhoneSupplierEditText.getText().toString().trim();
+        String emailSupplier = mEmailSupplierEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         // Section is left out because of spinner values
 
@@ -243,6 +279,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         ContentValues values = new ContentValues();
         values.put(StockItemEntry.COLUMN_NAME, nameString);
         values.put(StockItemEntry.COLUMN_BRAND, brandString);
+        values.put(StockItemEntry.COLUMN_STOCK_QTY, stockQtyString);
+        values.put(StockItemEntry.COLUMN_NAME_SUPPLIER, nameSupplier);
+        values.put(StockItemEntry.COLUMN_PHONE_SUPPLIER, phoneSupplier);
+        values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, emailSupplier);
         values.put(StockItemEntry.COLUMN_SECTION, mSection);
         values.put(StockItemEntry.COLUMN_PRICE, price);
 
@@ -385,6 +425,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 StockItemEntry._ID,
                 StockItemEntry.COLUMN_NAME,
                 StockItemEntry.COLUMN_BRAND,
+                StockItemEntry.COLUMN_STOCK_QTY,
+                StockItemEntry.COLUMN_NAME_SUPPLIER,
+                StockItemEntry.COLUMN_PHONE_SUPPLIER,
+                StockItemEntry.COLUMN_EMAIL_SUPPLIER,
                 StockItemEntry.COLUMN_SECTION,
                 StockItemEntry.COLUMN_PRICE};
 
@@ -444,29 +488,67 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Find the columns of the stock table attributes (the header)
             int nameColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_NAME);
             int brandColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_BRAND);
+            int stockQtyColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_STOCK_QTY);
+            int nameSupplierColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_NAME_SUPPLIER);
+            int phoneSupplierColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_PHONE_SUPPLIER);
+            int emailSupplierColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_EMAIL_SUPPLIER);
             int sectionColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_SECTION);
             int priceColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_PRICE);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
             String brand = cursor.getString(brandColumnIndex);
+            int stockQty = cursor.getInt(stockQtyColumnIndex);
+            String nameSupplier = cursor.getString(nameSupplierColumnIndex);
+            int phoneSupplier = cursor.getInt(phoneSupplierColumnIndex);
+            String emailSupplier = cursor.getString(emailSupplierColumnIndex);
             int section = cursor.getInt(sectionColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
 
             mNameEditText.setText(name);
             mBrandEditText.setText(brand);
+            mStockQtyEditText.setText(Integer.toString(stockQty));
+            mNameSupplierEditText.setText(nameSupplier);
+            mPhoneSupplierEditText.setText(Integer.toString(phoneSupplier));
+            mEmailSupplierEditText.setText(emailSupplier);
             mPriceEditText.setText(Integer.toString(price));
 
             // Section is a dropdown spinner, so ma the constant value from the database
             // into one of the dropdown options (0 == Unknown, 1 == FRUIT, 2 == VEGETABLES).
             // Then call setSelection() so that option is displayed on screen as the current selection.
+            // unknown, bread, cleaning materials, cosmetics, dairy products, dressings and sauces,
+            // electrical, frozen food, fruit, kitchen utensils, vegetables)
             switch (section) {
 
-                case StockItemEntry.SECTION_FRUIT:
+                case StockItemEntry.SECTION_BREAD:
                     mSectionSpinner.setSelection(1);
                     break;
-                case StockItemEntry.SECTION_VEGETABLES:
+                case StockItemEntry.SECTION_CLEANING:
                     mSectionSpinner.setSelection(2);
+                    break;
+                case StockItemEntry.SECTION_COSMETICS:
+                    mSectionSpinner.setSelection(3);
+                    break;
+                case StockItemEntry.SECTION_DAIRY:
+                    mSectionSpinner.setSelection(4);
+                    break;
+                case StockItemEntry.SECTION_DRESSINGS_SAUCES:
+                    mSectionSpinner.setSelection(5);
+                    break;
+                case StockItemEntry.SECTION_ELECTRICAL:
+                    mSectionSpinner.setSelection(6);
+                    break;
+                case StockItemEntry.SECTION_FROZEN:
+                    mSectionSpinner.setSelection(7);
+                    break;
+                case StockItemEntry.SECTION_FRUIT:
+                    mSectionSpinner.setSelection(8);
+                    break;
+                case StockItemEntry.SECTION_KITCHEN_UTENSILS:
+                    mSectionSpinner.setSelection(9);
+                    break;
+                case StockItemEntry.SECTION_VEGETABLES:
+                    mSectionSpinner.setSelection(10);
                     break;
                 default: // This is the situation that the spinner is in by default
                     mSectionSpinner.setSelection(0);
@@ -488,6 +570,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If the loader is invalidated, clear out all the data from the input fields.
         mNameEditText.setText("");
         mBrandEditText.setText("");
+        mStockQtyEditText.setText("");
+        mNameSupplierEditText.setText("");
+        mPhoneSupplierEditText.setText("");
+        mEmailSupplierEditText.setText("");
         mPriceEditText.setText("");
         mSectionSpinner.setSelection(0); // By default, set section to "Unknown"
     }

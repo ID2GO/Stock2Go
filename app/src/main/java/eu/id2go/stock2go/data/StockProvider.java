@@ -169,6 +169,14 @@ public class StockProvider extends ContentProvider {
         String name = values.getAsString(StockItemEntry.COLUMN_NAME);
         // check brand is not null
         String brand = values.getAsString(StockItemEntry.COLUMN_BRAND);
+        // check stockQty is not null
+        Integer stockQty = values.getAsInteger(StockItemEntry.COLUMN_STOCK_QTY);
+        // check nameSupplier is not null
+        String nameSupplier = values.getAsString(StockItemEntry.COLUMN_NAME_SUPPLIER);
+        // check phoneSupplier is not null
+        Integer phoneSupplier = values.getAsInteger(StockItemEntry.COLUMN_PHONE_SUPPLIER);
+        // check emailSupplier is not null
+        String emailSupplier = values.getAsString(StockItemEntry.COLUMN_EMAIL_SUPPLIER);
         // check section if it is null or invalid
         Integer section = values.getAsInteger(StockItemEntry.COLUMN_SECTION);
         // check price to be equal or greater than 0 kg
@@ -186,14 +194,34 @@ public class StockProvider extends ContentProvider {
         if (brand == null || brand.isEmpty()) {
 //            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_brand),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Stock item requires valid brand");
-
+        }
+        // check phoneSupplier
+        if (stockQty != null && stockQty <= 0) {
+//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_stock_qty),Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Valid stock quantity required");
+        }
+        // check nameSupplier
+        if (nameSupplier == null || nameSupplier.isEmpty()) {
+//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_name_supplier),Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Valid Supplier name required");
+        }
+        if (phoneSupplier != null && phoneSupplier < 0) {
+//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_stock_qty),Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Valid stock quantity required");
+        }
+        // check emailSupplier
+        if (emailSupplier == null || emailSupplier.isEmpty()) {
+//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_email_supplier),Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Valid e-mail address required");
         }
         // check section with either/or check
         if (section == null || !StockItemEntry.isValidSection(section)) {
+            //            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_valid_section_required),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Stock item requires valid section");
         }
         // check price checking both conditions with &&
         if (price != null && price < 0) {
+            //            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_price_required),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Stock item requires valid price");
         }
 
@@ -252,6 +280,14 @@ public class StockProvider extends ContentProvider {
         String name = values.getAsString(StockItemEntry.COLUMN_NAME);
         // check brand is not null or empty
         String brand = values.getAsString(StockItemEntry.COLUMN_BRAND);
+        // check stock quantity is not null or empty
+        Integer stockQty = values.getAsInteger(StockItemEntry.COLUMN_STOCK_QTY);
+        // check Supplier name is not null or empty
+        String nameSupplier = values.getAsString(StockItemEntry.COLUMN_NAME_SUPPLIER);
+        // check Supplier phone is not null or empty
+        Integer phoneSupplier = values.getAsInteger(StockItemEntry.COLUMN_PHONE_SUPPLIER);
+        // check Supplier email is not null or empty
+        String emailSupplier = values.getAsString(StockItemEntry.COLUMN_EMAIL_SUPPLIER);
         // check section if it is null or invalid
         Integer section = values.getAsInteger(StockItemEntry.COLUMN_SECTION);
         // check price to be equal or greater than 0 kg
@@ -265,7 +301,7 @@ public class StockProvider extends ContentProvider {
             // It's faster and will return true if the String is empty or null.
             if (TextUtils.isEmpty(name)) {
                 throw new IllegalArgumentException("Stock item requires a name");
-//            Toast.makeText(this, getString(R.string.toast_insert_stock_item_name),Toast.LENGTH_SHORT).show();
+                //      Toast.makeText(this, getString(R.string.toast_insert_stock_item_name),Toast.LENGTH_SHORT).show();
             }
         }
         // If the {@link StockItemEntry#COLUMN_BRAND} key is present,
@@ -274,7 +310,43 @@ public class StockProvider extends ContentProvider {
             // sanity check brand
             if (brand == null || brand.isEmpty()) {
                 throw new IllegalArgumentException("Stock item requires valid brand");
-//            Toast.makeText(this, getString(R.string.toast_insert_stock_item_brand),Toast.LENGTH_SHORT).show();
+                //      Toast.makeText(this, getString(R.string.toast_insert_stock_item_brand),Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        // If the {@link StockItemEntry#COLUMN_STOCK_QTY} key is present,
+        // check that the stockQty value is not null or empty
+        if (values.containsKey(StockItemEntry.COLUMN_STOCK_QTY)) {
+            // sanity check stockQty
+            if (stockQty != null && stockQty < 0) {
+                throw new IllegalArgumentException("Stock item requires valid quantity");
+                //      Toast.makeText(this, getString(R.string.toast_insert_stock_item_brand),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        // If the {@link StockItemEntry#COLUMN_NAME_SUPPLIER} key is present,
+        // check that the nameSupplier value is not null or empty
+        if (values.containsKey(StockItemEntry.COLUMN_NAME_SUPPLIER)) {
+            // sanity check nameSupplier
+            if (nameSupplier == null || nameSupplier.isEmpty()) {
+                throw new IllegalArgumentException("Stock item requires valid Supplier name");
+                //     Toast.makeText(this, getString(R.string.toast_insert_stock_name_supplier),Toast.LENGTH_SHORT).show();
+            }
+        }
+        // If the {@link StockItemEntry#COLUMN_PHONE_SUPPLIER} key is present,
+        // check that the nameSupplier value is not null or empty
+        if (values.containsKey(StockItemEntry.COLUMN_PHONE_SUPPLIER)) {
+            if (phoneSupplier != null && phoneSupplier < 0) {
+                throw new IllegalArgumentException("Stock item requires valid phone_number");
+                //     Toast.makeText(this, getString(R.string.toast_insert_stock_supplier_phone_number),Toast.LENGTH_SHORT).show();
+            }
+        }
+        // If the {@link StockItemEntry#COLUMN_EMAIL_SUPPLIER} key is present,
+        // check that the nameSupplier value is not null or empty
+        if (values.containsKey(StockItemEntry.COLUMN_EMAIL_SUPPLIER)) {
+            if (emailSupplier == null || emailSupplier.isEmpty()) {
+                throw new IllegalArgumentException("Stock item requires valid phone_number");
+                //     Toast.makeText(this, getString(R.string.toast_insert_stock_supplier_phone_number),Toast.LENGTH_SHORT).show();
             }
         }
         // If the {@link StockItemEntry#COLUMN_SECTION} key is present,
@@ -301,7 +373,6 @@ public class StockProvider extends ContentProvider {
 
         // Otherwise get database in writing mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
 
         // Perform the update on the database and get the number of rows affected
         int rowsUpdated = db.update(StockItemEntry.TABLE_NAME, values, selection, selectionArgs);

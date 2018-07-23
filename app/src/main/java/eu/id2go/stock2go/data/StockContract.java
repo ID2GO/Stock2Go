@@ -82,11 +82,15 @@ public final class StockContract {
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_BRAND = "brand";
+        public static final String COLUMN_STOCK_QTY = "stockQuantity";
+        public static final String COLUMN_NAME_SUPPLIER = "nameSupplier";
+        public static final String COLUMN_PHONE_SUPPLIER = "phoneSupplier";
+        public static final String COLUMN_EMAIL_SUPPLIER = "email";
         public static final String COLUMN_SECTION = "section";
         public static final String COLUMN_PRICE = "price";
 
         /**
-         * Possible values for the section of the stock2go (unknown, bread, cleaning materials, cosmetics, dairy products, dressings and sauces, electrical, frozen food, fruit, kitchen utensils, vegetables
+         * Possible values for the section of the stock2go (unknown, bread, cleaning materials, cosmetics, dairy products, dressings and sauces, electrical, frozen food, fruit, kitchen utensils, vegetables)
          */
         public static final int SECTION_UNKNOWN = 0;
         public static final int SECTION_BREAD = 1;
