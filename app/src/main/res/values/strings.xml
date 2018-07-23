@@ -63,7 +63,7 @@
     <string name="toast_success_inserting_dummy_stock_item_data">Dummy stock item info successfully inserted</string>
 
     <string name="toast_insert_stock_item_name">Please insert a stock item name</string>
-    <string name="toast_insert_stock_item_breed">Please insert a stock item breed</string>
+    <string name="toast_insert_stock_item_brand">Please insert a stock item brand</string>
 
     <!-- Title for the activity to add a new stock item [CHAR LIMIT=20] -->
     <string name="editor_activity_title_new_stock_item">Add a stock item</string>
@@ -102,20 +102,31 @@
     <string name="category_section">Section</string>
 
     <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
-    <string name="category_measurement">Measurement</string>
+    <string name="price">Price in €</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_stock_item_name">Name</string>
 
-    <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_stock_item_breed">Breed</string>
+    <!-- Text hint for brand field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_stock_item_brand">Brand</string>
 
+    <!-- Text hint for Quantity field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_stock_item_quantity"># in stock</string>
+
+    <!-- Text hint for Supplier field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_stock_item_supplier">Name of Supplier</string>
+
+    <!-- Text hint for Supplier phone number field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_stock_item_supplier_phone">Phone number of Supplier</string>
+
+    <!-- Text hint for Supplier e-mail field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_stock_item_supplier_email">e-mail address of Supplier</string>
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_stock_item_weight">Weight</string>
+    <string name="hint_stock_item_price">Price per Item</string>
 
     <!-- Pricing as sold by Units or by kilograms [CHAR LIMIT=5] -->
-    <string name="unit_stock_item_weight">p/kg</string>
-    <!--<string name="unit_stock_item_units">p/unit</string>-->
+    <!--<string name="unit_stock_item_price">p/kg</string>-->
+    <string name="unit_stock_item_units">p/Item</string>
 
     <!-- Label for dropdown menu option if the stock item section is unknown [CHAR LIMIT=20] -->
     <!-- Possible values for the section of the stock2go (unknown, bread, cleaning materials,
@@ -132,6 +143,6 @@
     <string name="section_kitchen_utensils">Kitchen_utensils</string>
     <string name="section_vegetables">Vegetables</string>
 
-    <!-- Label for the stock item breed if the breed is unknown [CHAR LIMIT=20] -->
-    <string name="unknown_breed">Unknown breed</string>
+    <!-- Label for the stock item brand if the brand is unknown [CHAR LIMIT=20] -->
+    <string name="unknown_brand">Unknown brand</string>
 </resources>

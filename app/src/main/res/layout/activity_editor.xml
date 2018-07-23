@@ -35,7 +35,7 @@
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:paddingLeft="4dp"
             android:orientation="vertical">
 
@@ -46,12 +46,40 @@
                 android:inputType="textCapWords"
                 style="@style/EditorFieldStyle" />
 
-            <!-- Breed field -->
+            <!-- Brand field -->
             <EditText
-                android:id="@+id/edit_stock_item_breed"
-                android:hint="@string/hint_stock_item_breed"
+                android:id="@+id/edit_stock_item_brand"
+                android:hint="@string/hint_stock_item_brand"
                 android:inputType="textCapWords"
                 style="@style/EditorFieldStyle" />
+
+            <!-- Qty field -->
+            <EditText
+                android:id="@+id/edit_stock_item_Qty"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/hint_stock_item_quantity"
+                android:inputType="number" />
+
+            <!-- Supplier field -->
+            <EditText
+                android:id="@+id/edit_stock_item_Supplier"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/hint_stock_item_supplier"
+                android:inputType="textCapWords" />
+
+            <!-- Supplier phone number field -->
+            <EditText
+                android:id="@+id/edit_stock_item_supplier_phone"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/hint_stock_item_supplier_phone"
+                android:inputType="phone" />
+
+            <!-- Supplier e-mail field -->
+            <EditText
+                android:id="@+id/edit_stock_item_supplier_email"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/hint_stock_item_supplier_email"
+                android:inputType="textEmailAddress" />
         </LinearLayout>
     </LinearLayout>
 
@@ -71,7 +99,7 @@
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:orientation="vertical">
 
             <!-- Section drop-down spinner -->
@@ -93,27 +121,28 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_measurement"
+            android:text="@string/price"
             style="@style/CategoryStyle" />
+
 
         <!-- Input fields -->
         <RelativeLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:paddingLeft="4dp">
 
-            <!-- Weight field -->
+            <!-- Price field -->
             <EditText
-                android:id="@+id/edit_stock_item_weight"
-                android:hint="@string/hint_stock_item_weight"
+                android:id="@+id/edit_stock_item_price"
+                android:hint="@string/hint_stock_item_price"
                 android:inputType="number"
                 style="@style/EditorFieldStyle" />
 
-            <!-- Units for weight (kg) -->
+            <!-- Units for price (kg) -->
             <TextView
-                android:id="@+id/label_weight_units"
-                android:text="@string/unit_stock_item_weight"
+                android:id="@+id/label_price_units"
+                android:text="@string/unit_stock_item_units"
                 style="@style/EditorUnitsStyle"/>
         </RelativeLayout>
     </LinearLayout>
