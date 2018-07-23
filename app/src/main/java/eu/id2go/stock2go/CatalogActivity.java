@@ -109,7 +109,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private void insertStockItem() {
 
         // Create a ContentValues object where column names are the keys,
-        // and Toto's stockItem attributes are the values.
+        // and Toto's stockItem attributes are the values..
         ContentValues values = new ContentValues();
         values.put(StockItemEntry.COLUMN_NAME, "Knife");
         values.put(StockItemEntry.COLUMN_BRAND, "Gero Young");
