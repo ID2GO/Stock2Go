@@ -11,32 +11,32 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Name for the application [CHAR LIMIT=12] -->
-    <string name="app_name">Pets</string>
+    <string name="app_name">Stock2Go</string>
 
     <!-- Empty_View -->
     <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
-    <string name="empty_view_title_text">It\'s a bit lonely here ...., &#8230;</string>
-    <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
-    <string name="empty_view_subtitle_text">Get started by adding a pet</string>
+    <string name="empty_view_title_text">The database is still empty&#8230;</string>
+    <!-- Subtitle text for the empty view that prompts the user to add a stock item [CHAR LIMIT=50] -->
+    <string name="empty_view_subtitle_text">Get started by adding a stock item</string>
 
-    <!-- CatalogAction menu Dummy data & Delete all pets-->
-    <!-- Label for overflow menu option that inserts fake pet data into the app [CHAR LIMIT=20] -->
+    <!-- CatalogAction menu Dummy data & Delete all stock2go-->
+    <!-- Label for overflow menu option that inserts fake stock item data into the app [CHAR LIMIT=20] -->
     <string name="action_insert_dummy_data">Insert Dummy Data</string>
 
-    <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
-    <string name="action_delete_all_entries">Delete All Pets</string>
+    <!-- Label for overflow menu option that deletes all stock item data in the app [CHAR LIMIT=20] -->
+    <string name="action_delete_all_entries">Delete All Stock items</string>
 
     <!-- Log messages for testing purposes in dev. mode-->
     <string name="log_prepared_options_menu">onPrepareOptionsMenu setting delete button visibility false</string>
     <string name="log_unsaved_changes_dialog">Warning unsaved changes to be discarded</string>
-    <string name="error_inserting_new_row">Failed to insert row for: <xliff:g exemple="4" id="pets_in_table_of_contents"> </xliff:g> </string>
+    <string name="error_inserting_new_row">Failed to insert row for: <xliff:g exemple="4" id="Stock item_in_table_of_contents"> </xliff:g> </string>
 
 
     <!-- Error deleting Table from database-->
-    <string name="error_deleting_all_entries">Error deleting rows in Pets Table: <xliff:g exemple="4" id="pets_in_table_of_contents"> </xliff:g> </string>
-    <!-- Toast message confirming # pet rowsDeleted [CHAR LIMIT=20] -->
-    <!--<string name="confirmation_deletion_all_entries">rows in Pets Table deleted </string>-->
-    <string name="confirmation_deletion_all_entries">Rows in Pets Table deleted: <xliff:g exemple="4" id="pets_in_table_of_contents"> </xliff:g> </string>
+    <string name="error_deleting_all_entries">Error deleting rows in Stock Table: <xliff:g exemple="4" id="Stock item_in_table_of_contents"> </xliff:g> </string>
+    <!-- Toast message confirming # stock item rowsDeleted [CHAR LIMIT=20] -->
+    <!--<string name="confirmation_deletion_all_entries">rows in Stock Table deleted </string>-->
+    <string name="confirmation_deletion_all_entries">Rows in Stock Table deleted: <xliff:g exemple="4" id="Stock item_in_table_of_contents"> </xliff:g> </string>
 
     <!-- EditorActivity strings in case of leaving activity -->
     <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
@@ -45,86 +45,93 @@
     <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
     <string name="discard">Discard</string>
 
-    <!-- Dialog button text for the option to keep editing the current pet [CHAR LIMIT=20] -->
+    <!-- Dialog button text for the option to keep editing the current stock item [CHAR LIMIT=20] -->
     <string name="keep_editing">Keep Editing</string>
 
 
     <!--Toast for Editor insert data-->
-    <string name="toast_error_editor_empty_fields">Please fill all fields with pet info</string>
-    <string name="toast_error_editor_inserting_pet_data">Error while inserting pet info</string>
-    <string name="toast_success_editor_inserting_pet_data">Pet info successfully inserted</string>
+    <string name="toast_error_editor_empty_fields">Please fill all fields with stock item info</string>
+    <string name="toast_error_editor_inserting_stock_item_data">Error while inserting stock item info</string>
+    <string name="toast_success_editor_inserting_stock_item_data">Stock item info successfully inserted</string>
 
     <!--Toast for Editor updating data-->
-    <string name="toast_error_editor_updating_pet_data">Error while updating pet info</string>
-    <string name="toast_success_editor_updating_pet_data">Pet info successfully updated</string>
+    <string name="toast_error_editor_updating_stock_item_data">Error while updating stock item info</string>
+    <string name="toast_success_editor_updating_stock_item_data">Stock item info successfully updated</string>
 
     <!--Toast for dummy data-->
-    <string name="toast_error_inserting_dummy_pet_data">Error while inserting dummy pet info</string>
-    <string name="toast_success_inserting_dummy_pet_data">Dummy pet info successfully inserted</string>
+    <string name="toast_error_inserting_dummy_stock_item_data">Error while inserting dummy stock item info</string>
+    <string name="toast_success_inserting_dummy_stock_item_data">Dummy stock item info successfully inserted</string>
 
-    <string name="toast_insert_pet_name">Please insert a pet name</string>
-    <string name="toast_insert_pet_breed">Please insert a pet breed</string>
+    <string name="toast_insert_stock_item_name">Please insert a stock item name</string>
+    <string name="toast_insert_stock_item_breed">Please insert a stock item breed</string>
 
-    <!-- Title for the activity to add a new pet [CHAR LIMIT=20] -->
-    <string name="editor_activity_title_new_pet">Add a Pet</string>
+    <!-- Title for the activity to add a new stock item [CHAR LIMIT=20] -->
+    <string name="editor_activity_title_new_stock_item">Add a stock item</string>
 
-    <!-- Title for the activity to add a new pet [CHAR LIMIT=20] -->
-    <string name="editor_activity_title_edit_existing_pet">Edit Pet</string>
+    <!-- Title for the activity to add a new stock item [CHAR LIMIT=20] -->
+    <string name="editor_activity_title_edit_existing_stock_item">Edit stock item</string>
 
-    <!-- Label for editor menu option to save pet and leave editor [CHAR LIMIT=20] -->
+    <!-- Label for editor menu option to save stock item and leave editor [CHAR LIMIT=20] -->
     <string name="action_save">Save</string>
 
-    <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
+    <!-- Label for editor overflow menu option that deletes the current stock item [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
 
 
     <!-- Delete Dialog in EditorActivity -->
-    <!-- Toast message in editor when current pet was successfully deleted [CHAR LIMIT=NONE] -->
-    <string name="editor_delete_pet_successful">Pet deleted</string>
+    <!-- Toast message in editor when current stock item was successfully deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_stock_item_successful">Stock item deleted</string>
 
-    <!-- Toast message in editor when current pet has failed to be deleted [CHAR LIMIT=NONE] -->
-    <string name="editor_delete_pet_failed">Error with deleting pet</string>
+    <!-- Toast message in editor when current stock item has failed to be deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_stock_item_failed">Error with deleting stock item</string>
 
-    <!-- Dialog message to ask the user to confirm deleting the current pet [CHAR LIMIT=NONE] -->
-    <string name="delete_dialog_msg">Delete this pet?</string>
+    <!-- Dialog message to ask the user to confirm deleting the current stock item [CHAR LIMIT=NONE] -->
+    <string name="delete_dialog_msg">Delete this stock item?</string>
 
-    <!-- Dialog button text for the option to confirm deleting the current pet [CHAR LIMIT=20] -->
+    <!-- Dialog button text for the option to confirm deleting the current stock item [CHAR LIMIT=20] -->
     <string name="delete">Delete</string>
 
-    <!-- Dialog button text for the option to cancel deletion of the current pet [CHAR LIMIT=20] -->
+    <!-- Dialog button text for the option to cancel deletion of the current stock item [CHAR LIMIT=20] -->
     <string name="cancel">Cancel</string>
 
 
     <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
     <string name="category_overview">Overview</string>
 
-    <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
-    <string name="category_gender">Gender</string>
+    <!-- Label for section information in the editor [CHAR LIMIT=30] -->
+    <string name="category_section">Section</string>
 
     <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
     <string name="category_measurement">Measurement</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_pet_name">Name</string>
+    <string name="hint_stock_item_name">Name</string>
 
     <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_pet_breed">Breed</string>
+    <string name="hint_stock_item_breed">Breed</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_pet_weight">Weight</string>
+    <string name="hint_stock_item_weight">Weight</string>
 
-    <!-- Units for weight of the pet (kilograms) [CHAR LIMIT=5] -->
-    <string name="unit_pet_weight">kg</string>
+    <!-- Pricing as sold by Units or by kilograms [CHAR LIMIT=5] -->
+    <string name="unit_stock_item_weight">p/kg</string>
+    <!--<string name="unit_stock_item_units">p/unit</string>-->
 
-    <!-- Label for dropdown menu option if the pet's gender is unknown [CHAR LIMIT=20] -->
-    <string name="gender_unknown">Unknown</string>
+    <!-- Label for dropdown menu option if the stock item section is unknown [CHAR LIMIT=20] -->
+    <!-- Possible values for the section of the stock2go (unknown, bread, cleaning materials,
+    cosmetics, dairy products, dressings and sauces, electrical, frozen food, fruit, kitchen utensils, vegetables -->
+    <string name="section_unknown">Unknown</string>
+    <string name="section_bread">Bread</string>
+    <string name="section_cleaning">Cleaning</string>
+    <string name="section_cosmetics">Cosmetics</string>
+    <string name="section_dairy">Dairy</string>
+    <string name="section_dressings_sauces">Dressings and Sauces</string>
+    <string name="section_electrical">Electrical</string>
+    <string name="section_frozen">Frozen</string>
+    <string name="section_fruit">Fruit</string>
+    <string name="section_kitchen_utensils">Kitchen_utensils</string>
+    <string name="section_vegetables">Vegetables</string>
 
-    <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
-    <string name="gender_male">Male</string>
-
-    <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
-    <string name="gender_female">Female</string>
-
-    <!-- Label for the pet's breed if the breed is unknown [CHAR LIMIT=20] -->
+    <!-- Label for the stock item breed if the breed is unknown [CHAR LIMIT=20] -->
     <string name="unknown_breed">Unknown breed</string>
 </resources>
