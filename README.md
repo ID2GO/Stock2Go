@@ -1,8 +1,11 @@
 # Stock2Go
 
-Project Specification
+
 
 UDACITY ABND (Android Basics Nanodegree) final project: Inventory App, Stage 2
+
+
+Project Specification
 
 Layout
 Criteria 	Meets Specifications
