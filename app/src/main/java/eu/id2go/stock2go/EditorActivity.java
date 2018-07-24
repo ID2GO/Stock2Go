@@ -264,7 +264,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String priceString = mPriceEditText.getText().toString().trim();
         // Section is left out because of spinner values
 
+
         if (mCurrentStockItemUri == null && (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(brandString) ||
+                TextUtils.isEmpty(stockQtyString) || TextUtils.isEmpty(nameSupplier) ||
+                TextUtils.isEmpty(phoneSupplier) || TextUtils.isEmpty(emailSupplier) ||
                 TextUtils.isEmpty(priceString))) {
 
             Toast.makeText(this, getString(R.string.toast_error_editor_empty_fields), Toast.LENGTH_SHORT).show();
@@ -286,6 +289,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, emailSupplier);
         values.put(StockItemEntry.COLUMN_SECTION, mSection);
         values.put(StockItemEntry.COLUMN_PRICE, price);
+
 
         // Determine if this is a new or existing stock item by checking if mCurrentStockItemUri is null or not
         if (mCurrentStockItemUri == null) {
