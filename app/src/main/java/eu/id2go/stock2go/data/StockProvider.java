@@ -174,7 +174,7 @@ public class StockProvider extends ContentProvider {
         // check nameSupplier is not null
         String nameSupplier = values.getAsString(StockItemEntry.COLUMN_NAME_SUPPLIER);
         // check phoneSupplier is not null
-        Integer phoneSupplier = values.getAsInteger(StockItemEntry.COLUMN_PHONE_SUPPLIER);
+        String phoneSupplier = values.getAsString(StockItemEntry.COLUMN_PHONE_SUPPLIER);
         // check emailSupplier is not null
         String emailSupplier = values.getAsString(StockItemEntry.COLUMN_EMAIL_SUPPLIER);
         // check section if it is null or invalid
@@ -205,7 +205,7 @@ public class StockProvider extends ContentProvider {
 //            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_name_supplier),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Valid Supplier name required");
         }
-        if (phoneSupplier != null && phoneSupplier < 0) {
+        if (phoneSupplier == null || phoneSupplier.isEmpty()) {
 //            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_stock_qty),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Valid stock quantity required");
         }
@@ -285,7 +285,7 @@ public class StockProvider extends ContentProvider {
         // check Supplier name is not null or empty
         String nameSupplier = values.getAsString(StockItemEntry.COLUMN_NAME_SUPPLIER);
         // check Supplier phone is not null or empty
-        Integer phoneSupplier = values.getAsInteger(StockItemEntry.COLUMN_PHONE_SUPPLIER);
+        String phoneSupplier = values.getAsString(StockItemEntry.COLUMN_PHONE_SUPPLIER);
         // check Supplier email is not null or empty
         String emailSupplier = values.getAsString(StockItemEntry.COLUMN_EMAIL_SUPPLIER);
         // check section if it is null or invalid
@@ -336,7 +336,7 @@ public class StockProvider extends ContentProvider {
         // If the {@link StockItemEntry#COLUMN_PHONE_SUPPLIER} key is present,
         // check that the nameSupplier value is not null or empty
         if (values.containsKey(StockItemEntry.COLUMN_PHONE_SUPPLIER)) {
-            if (phoneSupplier != null && phoneSupplier < 0) {
+            if (phoneSupplier == null || phoneSupplier.isEmpty()) {
                 throw new IllegalArgumentException("Stock item requires valid phone_number");
                 //     Toast.makeText(this, getString(R.string.toast_insert_stock_supplier_phone_number),Toast.LENGTH_SHORT).show();
             }

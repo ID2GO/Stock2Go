@@ -52,7 +52,7 @@ public class StockDbHelper extends SQLiteOpenHelper {
                 + StockItemEntry.COLUMN_BRAND + " TEXT NOT NULL, "
                 + StockItemEntry.COLUMN_STOCK_QTY + " INTEGER NOT NULL, "
                 + StockItemEntry.COLUMN_NAME_SUPPLIER + " TEXT, "
-                + StockItemEntry.COLUMN_PHONE_SUPPLIER + " INTEGER NOT NULL, "
+                + StockItemEntry.COLUMN_PHONE_SUPPLIER + " TEXT NOT NULL, "
                 + StockItemEntry.COLUMN_EMAIL_SUPPLIER + " TEXT NOT NULL, "
                 + StockItemEntry.COLUMN_SECTION + " INTEGER NOT NULL, "
                 + StockItemEntry.COLUMN_PRICE + " INTEGER NOT NULL DEFAULT 0);";

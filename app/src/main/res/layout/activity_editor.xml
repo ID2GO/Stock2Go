@@ -43,7 +43,7 @@
             <EditText
                 android:id="@+id/edit_stock_item_name"
                 android:hint="@string/hint_stock_item_name"
-                android:inputType="textCapWords"
+                android:inputType="textCapWords|textAutoCorrect"
                 style="@style/EditorFieldStyle" />
 
             <!-- Brand field -->

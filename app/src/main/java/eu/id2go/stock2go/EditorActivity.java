@@ -178,6 +178,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText.setOnTouchListener(mTouchListener);
         mSectionSpinner.setOnTouchListener(mTouchListener);
 
+
         setupSpinner();
     }
 
@@ -500,7 +501,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String brand = cursor.getString(brandColumnIndex);
             int stockQty = cursor.getInt(stockQtyColumnIndex);
             String nameSupplier = cursor.getString(nameSupplierColumnIndex);
-            int phoneSupplier = cursor.getInt(phoneSupplierColumnIndex);
+            String phoneSupplier = cursor.getString(phoneSupplierColumnIndex);
             String emailSupplier = cursor.getString(emailSupplierColumnIndex);
             int section = cursor.getInt(sectionColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
@@ -509,7 +510,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mBrandEditText.setText(brand);
             mStockQtyEditText.setText(Integer.toString(stockQty));
             mNameSupplierEditText.setText(nameSupplier);
-            mPhoneSupplierEditText.setText(Integer.toString(phoneSupplier));
+            mPhoneSupplierEditText.setText(phoneSupplier);
             mEmailSupplierEditText.setText(emailSupplier);
             mPriceEditText.setText(Integer.toString(price));
 
