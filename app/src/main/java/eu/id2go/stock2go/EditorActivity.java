@@ -379,7 +379,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentStockItemUri == null) {
             Log.e(LOG_TAG, getString(R.string.log_prepared_options_menu));
             MenuItem deleteMenuItem = menu.findItem(R.id.action_delete);
-            MenuItem orderMenuItem = menu.findItem(R.id.action_contact);
+            MenuItem orderMenuItem = menu.findItem(R.id.action_order);
             deleteMenuItem.setVisible(false);
             orderMenuItem.setVisible(true);
         }
@@ -399,7 +399,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 return true;
 
             // Respond showing a dialog with phone & e-mail
-            case R.id.action_contact:
+            case R.id.action_order:
                 showOrderConfirmationDialog();
                 return true;
 
