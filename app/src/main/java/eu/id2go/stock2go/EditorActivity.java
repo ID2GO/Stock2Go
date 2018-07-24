@@ -184,7 +184,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 
     /**
-     * Setup the dropdown spinner that allows the user to select the section of the stock item.
+     * Setup the dropdown spinner that allows the user to select the section of the stock item
      */
     private void setupSpinner() {
         // Create adapter for spinner. The list options are from the String array it will use
