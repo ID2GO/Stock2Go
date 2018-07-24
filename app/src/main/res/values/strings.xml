@@ -48,6 +48,7 @@
     <!-- Dialog button text for the option to keep editing the current stock item [CHAR LIMIT=20] -->
     <string name="keep_editing">Keep Editing</string>
 
+    <!-- Strings for the Order menu & intents to phone call & e-mail -->
     <string name="action_order_confirmation">Please proceed to phone or e-mail to place your order</string>
     <string name="phone">Phone</string>
     <string name="email">E-mail</string>
