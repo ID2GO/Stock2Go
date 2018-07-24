@@ -48,6 +48,14 @@
     <!-- Dialog button text for the option to keep editing the current stock item [CHAR LIMIT=20] -->
     <string name="keep_editing">Keep Editing</string>
 
+    <string name="action_order_confirmation">Please proceed to phone or e-mail to place your order</string>
+    <string name="phone">Phone</string>
+    <string name="email">E-mail</string>
+    <string name="recurring_order_title">Recurring order for: </string>
+    <string name="recurring_order_title_brand">Brand:</string>
+    <string name="recurring_order_txt_body">Dear Sirs, \n\n\nPlease send us a soon as possible more</string>
+    <string name="recurring_order_txt_brand">of the brand:</string>
+
 
     <!--Toast for Editor insert data-->
     <string name="toast_error_editor_empty_fields">Please fill all fields with stock item info</string>
@@ -76,6 +84,8 @@
 
     <!-- Label for editor overflow menu option that deletes the current stock item [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
+
+    <string name="action_order">Order</string>
 
 
     <!-- Delete Dialog in EditorActivity -->

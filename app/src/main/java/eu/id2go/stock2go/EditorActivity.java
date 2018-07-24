@@ -37,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -103,6 +104,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      * EditText field to enter the stock item price
      */
     private EditText mPriceEditText;
+
+    /**
+     * Image buttons
+     */
+    ImageButton mDecreaseStockQty;
+    ImageButton mIncreaseStockQty;
+
     /**
      * Section of the stock item. The possible valid values are in the StockContract.java file:
      * {@link StockItemEntry#SECTION_UNKNOWN}, {@link StockItemEntry#SECTION_FRUIT}, etc. or
@@ -168,6 +176,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText = findViewById(R.id.edit_stock_item_price);
         mSectionSpinner = findViewById(R.id.spinner_section);
 
+        mDecreaseStockQty = findViewById(R.id.stock_qty_minus);
+        mIncreaseStockQty = findViewById(R.id.stock_qty_plus);
+
         // Checking on changes in edit fields to avoid data loss by accidental closing
         mNameEditText.setOnTouchListener(mTouchListener);
         mBrandEditText.setOnTouchListener(mTouchListener);
@@ -177,6 +188,34 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mEmailSupplierEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mSectionSpinner.setOnTouchListener(mTouchListener);
+
+        mDecreaseStockQty.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when a view has been clicked.
+             *
+             * @param v The view that was clicked.
+             */
+            @Override
+            public void onClick(View v) {
+                minOneFromStockQty();
+                mStockItemHasChanged = true;
+            }
+        });
+
+        mIncreaseStockQty.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when a view has been clicked.
+             *
+             * @param v The view that was clicked.
+             */
+            @Override
+            public void onClick(View v) {
+                plusOneToStockQty();
+                mStockItemHasChanged = true;
+            }
+        });
+
+
 
 
         setupSpinner();
@@ -339,8 +378,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If this is a new stock item, hide the "Delete" menu item.
         if (mCurrentStockItemUri == null) {
             Log.e(LOG_TAG, getString(R.string.log_prepared_options_menu));
-            MenuItem menuItem = menu.findItem(R.id.action_delete);
-            menuItem.setVisible(false);
+            MenuItem deleteMenuItem = menu.findItem(R.id.action_delete);
+            MenuItem orderMenuItem = menu.findItem(R.id.action_contact);
+            deleteMenuItem.setVisible(false);
+            orderMenuItem.setVisible(true);
         }
         return true;
     }
@@ -356,6 +397,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // exit activity
                 finish();
                 return true;
+
+            // Respond showing a dialog with phone & e-mail
+            case R.id.action_contact:
+                showOrderConfirmationDialog();
+                return true;
+
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
@@ -415,6 +462,70 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
     }
+
+    private void minOneFromStockQty() {
+        String changedValuesString = mStockQtyEditText.getText().toString();
+        int changedValue;
+        if (changedValuesString.isEmpty()) {
+            return;
+        } else if (changedValuesString.equals("0")) {
+            return;
+        } else {
+            changedValue = Integer.parseInt(changedValuesString);
+            mStockQtyEditText.setText(String.valueOf(changedValue - 1));
+        }
+    }
+
+    private void plusOneToStockQty() {
+        String changedValueString = mStockQtyEditText.getText().toString();
+        int changedValue;
+        if (changedValueString.isEmpty()) {
+            changedValue = 0;
+        } else {
+            changedValue = Integer.parseInt(changedValueString);
+        }
+        mStockQtyEditText.setText(String.valueOf(changedValue + 1));
+    }
+
+    private void showOrderConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.action_order_confirmation));
+        builder.setPositiveButton(R.string.phone, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Intent to make a phone call
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + mPhoneSupplierEditText.getText().toString().trim()));
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.email, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Intent to write an e-mail
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setType("text/plain");
+                intent.setData(Uri.parse("mailto:" + mEmailSupplierEditText.getText().toString().trim()));
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.recurring_order_title)
+                        + " " + mNameEditText.getText().toString().trim() + ", " +
+                        getString(R.string.recurring_order_title_brand) + " " +
+                        mBrandEditText.getText().toString().trim());
+                String bodyMessage = getString(R.string.recurring_order_txt_body) + " " +
+                        mNameEditText.getText().toString().trim() + ", " +
+                        getString(R.string.recurring_order_txt_brand) + " " +
+                        mBrandEditText.getText().toString().trim();
+                intent.putExtra(Intent.EXTRA_TEXT, bodyMessage);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
 
     /**
      * Instantiate and return a new Loader for the given ID.

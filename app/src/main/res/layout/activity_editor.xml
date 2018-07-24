@@ -53,12 +53,30 @@
                 android:inputType="textCapWords"
                 style="@style/EditorFieldStyle" />
 
-            <!-- Qty field -->
-            <EditText
-                android:id="@+id/edit_stock_item_Qty"
-                style="@style/EditorFieldStyle"
-                android:hint="@string/hint_stock_item_quantity"
-                android:inputType="number" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/stock_qty_minus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_min_1_to_db_custom" />
+                <!-- Qty field -->
+                <EditText
+                    android:id="@+id/edit_stock_item_Qty"
+                    style="@style/EditorFieldStyle"
+                    android:hint="@string/hint_stock_item_quantity"
+                    android:inputType="number" />
+
+                <ImageButton
+                    android:id="@+id/stock_qty_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_add_1_to_db_custom" />
+
+            </LinearLayout>
 
             <!-- Supplier field -->
             <EditText

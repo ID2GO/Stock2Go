@@ -34,9 +34,10 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/Stock2Go/ic_write_to_db.png" />
-                                      <entry key="outputName" value="ic_add_to_db_custom" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/Stock2Go/ic_exposure_neg_1_black_48dp.png" />
+                                      <entry key="outputName" value="ic_min_1_to_db_custom" />
                                       <entry key="theme" value="CUSTOM" />
+                                      <entry key="themeColor" value="f0514b" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -89,7 +90,7 @@
                                       <entry key="assetType" value="IMAGE" />
                                       <entry key="cropped" value="true" />
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/Stock2Go/ic_write_to_db.png" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/Stock2Go/ic_plus_one_black_48dp.png" />
                                       <entry key="outputName" value="ic_write_to_db" />
                                     </map>
                                   </option>
@@ -112,7 +113,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
+                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>
