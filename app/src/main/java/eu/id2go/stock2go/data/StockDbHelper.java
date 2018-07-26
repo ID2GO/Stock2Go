@@ -6,10 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import eu.id2go.stock2go.data.StockContract.StockItemEntry;
 
-// Reflection on SQLiteOpenHelper class, what should it do?
-// 1 Create a SQLite database when first accessed
-// 2 Connecting to created database
-// 3 Managing updating database schema if version changes
+
 
 /**
  * StockDbHelper class should extend the SQLiteOpenHelper

@@ -72,7 +72,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /**
      * Identifier for image loader
      */
-    static final int REQUEST_STOCK_IMAGE = 0;
+    static final int PICK_IMAGE_REQUEST = 0;
 
 //    name, brand, in stock, supplier, phone, e-mail, section, price, image
 
@@ -136,7 +136,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     ImageButton mGetStockItemImageBtn;
 
-    Uri actualImageUri;
 
     ImageButton mDecreaseStockQty;
     ImageButton mIncreaseStockQty;
@@ -207,10 +206,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSectionSpinner = findViewById(R.id.spinner_section);
 
         mStockItemImageView = findViewById(R.id.stock_item_image_view);
+        mGetStockItemImageBtn = findViewById(R.id.get_image_button);
 
         mDecreaseStockQty = findViewById(R.id.stock_qty_minus);
         mIncreaseStockQty = findViewById(R.id.stock_qty_plus);
-        mGetStockItemImageBtn = findViewById(R.id.get_image_button);
+
 
         // Attaching a TouchListener & Checking on changes in edit fields to avoid data loss by accidental closing
         mNameEditText.setOnTouchListener(mTouchListener);
@@ -336,7 +336,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // Read input from EditText fields
         // To avoid polluted output from string use trim() to eliminate leading or trailing white space
-
+        // {Section} is left out because of spinner predefined values
         String nameString = mNameEditText.getText().toString().trim();
         String brandString = mBrandEditText.getText().toString().trim();
         String stockQtyString = mStockQtyEditText.getText().toString().trim();
@@ -344,10 +344,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String phoneSupplier = mPhoneSupplierEditText.getText().toString().trim();
         String emailSupplier = mEmailSupplierEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        String stockItemImage = mStockItemImageView.setImageURI();
+        String stockItemImage = mStockItemImageView.toString();
 
         String imageUri = mGetStockItemImageBtn.toString();
-        // Section is left out because of spinner pre-defined values
 
 
         if (mCurrentStockItemUri == null && (TextUtils.isEmpty(nameString) ||
@@ -375,7 +374,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, emailSupplier);
         values.put(StockItemEntry.COLUMN_SECTION, mSection);
         values.put(StockItemEntry.COLUMN_PRICE, price);
-        values.put(StockItemEntry.COLUMN_IMAGE, imageUri);
+        values.put(StockItemEntry.COLUMN_IMAGE, stockItemImage);
 
 
         // Determine if this is a new or existing stock item by checking if mCurrentStockItemUri is null or not
@@ -595,16 +594,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             intent.addCategory(Intent.CATEGORY_OPENABLE);
         }
         intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Select picture"), REQUEST_STOCK_IMAGE);
+        startActivityForResult(Intent.createChooser(intent, "Select picture"), PICK_IMAGE_REQUEST);
     }
 
     @Override
-    public void onRequestPermissionResult(int requestCode,
-                                          String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission granted
                     openImageSelector();
                 }
@@ -618,12 +618,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If the request code seen here doesn't match, it's the response to some other intent,
         // and the below code shouldn't run at all.
 
-        if (requestCode == REQUEST_STOCK_IMAGE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             // The document selected by the user won't be returned in the intent.
             // Instead, a URI to that document will be contained in the return intent
             // provided to this method as a parameter.  Pull that uri using "resultData.getData()"
 
-            if (resultCode != null) {
+            if (resultData != null) {
+                mCurrentStockItemUri = resultData.getData();
+                Log.i(LOG_TAG, "Uri: " + mCurrentStockItemUri.toString());
+
+
+                mStockItemImageView.setImageURI(mCurrentStockItemUri);
+//                mStockItemImageView.invalidate();
 
             }
 
@@ -724,7 +730,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String emailSupplier = cursor.getString(emailSupplierColumnIndex);
             int section = cursor.getInt(sectionColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
-            String image = cursor.getString(imageColumnIndex);
+            String stockItemImage = cursor.getString(imageColumnIndex);
 
             mNameEditText.setText(name);
             mBrandEditText.setText(brand);
@@ -733,7 +739,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mPhoneSupplierEditText.setText(phoneSupplier);
             mEmailSupplierEditText.setText(emailSupplier);
             mPriceEditText.setText(Integer.toString(price));
-            mStockItemImageView.setImageURI(image);
+            mStockItemImageView.setImageURI(Uri.parse(stockItemImage));
 
             // Section is a dropdown spinner, so ma the constant value from the database
             // into one of the dropdown options (0 == Unknown, 1 == FRUIT, 2 == VEGETABLES).
@@ -797,8 +803,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPhoneSupplierEditText.setText("");
         mEmailSupplierEditText.setText("");
         mPriceEditText.setText("");
-        mStockItemImageView.setImageURI();
-//        mStockItemImageView.setImageURI();
+        mStockItemImageView.setImageURI(Uri.parse("")); // By default, set ImageUri to empty string
         mSectionSpinner.setSelection(0); // By default, set section to "Unknown"
     }
 

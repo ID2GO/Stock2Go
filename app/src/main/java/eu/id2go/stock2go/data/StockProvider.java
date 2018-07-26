@@ -184,7 +184,7 @@ public class StockProvider extends ContentProvider {
         // check price to be equal or greater than 0 kg
         Integer price = values.getAsInteger(StockItemEntry.COLUMN_PRICE);
         // check image is not null
-        String image = values.getAsString(StockItemEntry.COLUMN_PRICE);
+        String image = values.getAsString(StockItemEntry.COLUMN_IMAGE);
 
 
         // sanity check name
