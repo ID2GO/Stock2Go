@@ -3,11 +3,13 @@ package eu.id2go.stock2go;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import eu.id2go.stock2go.data.StockContract.StockItemEntry;
@@ -59,7 +61,7 @@ public class StockCursorAdapter extends CursorAdapter {
         // Find fields to populate in inflated template
         TextView nameTextView = view.findViewById(R.id.name);
         TextView summaryTextView = view.findViewById(R.id.summary);
-
+        ImageView image = view.findViewById(R.id.get_image_button);
         // Extract properties from cursor
         int nameColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_NAME);
         int brandColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_BRAND);
@@ -68,7 +70,9 @@ public class StockCursorAdapter extends CursorAdapter {
         String stockItemName = cursor.getString(nameColumnIndex);
         String stockItemBrand = cursor.getString(brandColumnIndex);
 
-        // If the stock item brand is empty string or null, then use some default text
+        image.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndex(StockItemEntry.COLUMN_IMAGE))));
+
+                // If the stock item brand is empty string or null, then use some default text
         // that says "Unknown brand", so the TextView isn't blank.
         if (TextUtils.isEmpty(stockItemBrand)) {
             stockItemBrand = context.getString(R.string.unknown_brand);

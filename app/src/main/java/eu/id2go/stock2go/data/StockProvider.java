@@ -9,7 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import eu.id2go.stock2go.R;
 import eu.id2go.stock2go.data.StockContract.StockItemEntry;
 
 import static eu.id2go.stock2go.data.StockContract.CONTENT_AUTHORITY;
@@ -181,48 +183,55 @@ public class StockProvider extends ContentProvider {
         Integer section = values.getAsInteger(StockItemEntry.COLUMN_SECTION);
         // check price to be equal or greater than 0 kg
         Integer price = values.getAsInteger(StockItemEntry.COLUMN_PRICE);
+        // check image is not null
+        String image = values.getAsString(StockItemEntry.COLUMN_PRICE);
 
 
         // sanity check name
         // using TextUtils.isEmpty(name) {} instead of using (name==null || name.isEmpty() ){}
         // It's faster and will return true if the String is empty or null.
         if (TextUtils.isEmpty(name)) {
-//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_name),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_name),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Stock item requires a name");
         }
         // check brand
         if (brand == null || brand.isEmpty()) {
-//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_brand),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_brand),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Stock item requires valid brand");
         }
         // check phoneSupplier
         if (stockQty != null && stockQty <= 0) {
-//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_stock_qty),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_stock_qty),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Valid stock quantity required");
         }
         // check nameSupplier
         if (nameSupplier == null || nameSupplier.isEmpty()) {
-//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_name_supplier),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_name_supplier),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Valid Supplier name required");
         }
         if (phoneSupplier == null || phoneSupplier.isEmpty()) {
-//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_stock_qty),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_supplier_phone),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Valid stock quantity required");
         }
         // check emailSupplier
         if (emailSupplier == null || emailSupplier.isEmpty()) {
-//            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_email_supplier),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_supplier_email),Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Valid e-mail address required");
         }
         // check section with either/or check
         if (section == null || !StockItemEntry.isValidSection(section)) {
-            //            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_valid_section_required),Toast.LENGTH_SHORT).show();
-            throw new IllegalArgumentException("Stock item requires valid section");
+            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_valid_section_required),Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Stock item requires a valid section");
         }
         // check price checking both conditions with &&
         if (price != null && price < 0) {
-            //            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_price_required),Toast.LENGTH_SHORT).show();
-            throw new IllegalArgumentException("Stock item requires valid price");
+            Toast.makeText(getContext(), (R.string.toast_insert_stock_item_price_required),Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Stock item requires a valid price");
+        }
+        // check image
+        if (image == null || image.isEmpty()) {
+            Toast.makeText(getContext(), (R.string.toast_image_required),Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Stock item requires a valid image");
         }
 
         // Get writable database
@@ -292,6 +301,8 @@ public class StockProvider extends ContentProvider {
         Integer section = values.getAsInteger(StockItemEntry.COLUMN_SECTION);
         // check price to be equal or greater than 0 kg
         Integer price = values.getAsInteger(StockItemEntry.COLUMN_PRICE);
+        // check image is not null or empty
+        String image = values.getAsString(StockItemEntry.COLUMN_IMAGE);
 
         // If the {@link StockItemEntry#COLUMN_NAME} key is present,
         // check that the name value is not null or empty.
@@ -363,6 +374,14 @@ public class StockProvider extends ContentProvider {
             // sanity check price checking both conditions with &&
             if (price != null && price < 0) {
                 throw new IllegalArgumentException("Stock item requires valid price");
+            }
+        }
+        // If the {@link StockItemEntry#COLUMN_IMAGE} key is present,
+        // check that the image value is not null or empty
+        if (values.containsKey(StockItemEntry.COLUMN_IMAGE)) {
+            // sanity check image checking both conditions with either/or check
+            if (image == null || image.isEmpty()) {
+                throw new IllegalArgumentException("Stock item requires valid image");
             }
         }
         // If there are no values to update, then don't try to update the database

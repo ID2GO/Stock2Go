@@ -10,6 +10,12 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Descriptions & Hints -->
+    <string name="camera_button">Take a photo of the item to stock</string>
+    <string name="camera_button_hint">Take a photo of the item to stock</string>
+
+
     <!-- Name for the application [CHAR LIMIT=12] -->
     <string name="app_name">Stock2Go</string>
 
@@ -71,8 +77,16 @@
     <string name="toast_error_inserting_dummy_stock_item_data">Error while inserting dummy stock item info</string>
     <string name="toast_success_inserting_dummy_stock_item_data">Dummy stock item info successfully inserted</string>
 
+    <!-- Warning empty edit fields -->
     <string name="toast_insert_stock_item_name">Please insert a stock item name</string>
     <string name="toast_insert_stock_item_brand">Please insert a stock item brand</string>
+    <string name="toast_insert_stock_item_stock_qty">Please up the stock item quantity</string>
+    <string name="toast_insert_stock_item_name_supplier">Please insert the name of the stock item supplier</string>
+    <string name="toast_insert_stock_item_supplier_phone">Please insert the phone number of the supplier</string>
+    <string name="toast_insert_stock_item_supplier_email">Please insert the e-mail address of the supplier</string>
+    <string name="toast_insert_stock_item_valid_section_required">Please select a valid section</string>
+    <string name="toast_insert_stock_item_price_required">Please insert the stock item price</string>
+    <string name="toast_image_required">Please take or select a stock item image</string>
 
     <!-- Title for the activity to add a new stock item [CHAR LIMIT=20] -->
     <string name="editor_activity_title_new_stock_item">Add a stock item</string>

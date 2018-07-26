@@ -109,18 +109,19 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private void insertStockItem() {
 
         // Create a ContentValues object where column names are the keys,
-        // and Toto's stockItem attributes are the values.
+        // and dummy stockItem attributes are the values.
         ContentValues values = new ContentValues();
         values.put(StockItemEntry.COLUMN_NAME, "Knife");
         values.put(StockItemEntry.COLUMN_BRAND, "Gero Young");
-        values.put(StockItemEntry.COLUMN_STOCK_QTY, 15);
+        values.put(StockItemEntry.COLUMN_STOCK_QTY, 12);
         values.put(StockItemEntry.COLUMN_NAME_SUPPLIER, "Gero");
         values.put(StockItemEntry.COLUMN_PHONE_SUPPLIER, "+31650620159");
         values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, "info@gero.nl");
         values.put(StockItemEntry.COLUMN_SECTION, StockItemEntry.SECTION_KITCHEN_UTENSILS);
         values.put(StockItemEntry.COLUMN_PRICE, 17);
+        values.put(StockItemEntry.COLUMN_IMAGE, "android.resource://eu.id2go.stock2go/drawable/knife");
 
-        // Insert a new row for Toto in the database, returning the ID of that new row.
+        // Insert a new row of dummy data in the database, returning the ID of that new row.
         // The first argument for db.insert() is the stock2go table name.
         // The second argument provides the name of a column in which the framework
         // can insert NULL in the event that the ContentValues is empty (if
@@ -202,7 +203,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 StockItemEntry.COLUMN_PHONE_SUPPLIER,
                 StockItemEntry.COLUMN_EMAIL_SUPPLIER,
                 StockItemEntry.COLUMN_SECTION,
-                StockItemEntry.COLUMN_PRICE};
+                StockItemEntry.COLUMN_PRICE,
+                StockItemEntry.COLUMN_IMAGE};
 
         // Perform a query on the provider using the ContentResolver.
         // Use the {@link StockItemEntry#CONTENT_URI} to access the stockItem data.

@@ -23,7 +23,7 @@ public class StockDbHelper extends SQLiteOpenHelper {
      * If the database schema changes (i.e. when adding columns for extra data),
      * than increment the database version number!
      */
-    private static final String DATABASE_NAME = "shelter.db";
+    private static final String DATABASE_NAME = "stock2go.db";
     private static final int DATABASE_VERSION = 1;
 
     /**
@@ -50,12 +50,13 @@ public class StockDbHelper extends SQLiteOpenHelper {
                 + StockItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + StockItemEntry.COLUMN_NAME + " TEXT NOT NULL, "
                 + StockItemEntry.COLUMN_BRAND + " TEXT NOT NULL, "
-                + StockItemEntry.COLUMN_STOCK_QTY + " INTEGER NOT NULL, "
+                + StockItemEntry.COLUMN_STOCK_QTY + " INTEGER NOT NULL DEFAULT 0, "
                 + StockItemEntry.COLUMN_NAME_SUPPLIER + " TEXT, "
                 + StockItemEntry.COLUMN_PHONE_SUPPLIER + " TEXT NOT NULL, "
                 + StockItemEntry.COLUMN_EMAIL_SUPPLIER + " TEXT NOT NULL, "
                 + StockItemEntry.COLUMN_SECTION + " INTEGER NOT NULL, "
-                + StockItemEntry.COLUMN_PRICE + " INTEGER NOT NULL DEFAULT 0);";
+                + StockItemEntry.COLUMN_PRICE + " INTEGER NOT NULL DEFAULT 0, "
+                + StockItemEntry.COLUMN_IMAGE + " TEXT NOT NULL);";
 
         // To execute the SQL statement
         db.execSQL(SQL_CREATE_STOCK_TABLE);
@@ -73,7 +74,7 @@ public class StockDbHelper extends SQLiteOpenHelper {
 //    This method should be called into action when downgrading the database version
 //    @Override
 //    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        onUpgrade(db, oldVersion, newVersion);
+//        onUpgrade(db, int oldVersion, int newVersion);
 //    }
 
 }

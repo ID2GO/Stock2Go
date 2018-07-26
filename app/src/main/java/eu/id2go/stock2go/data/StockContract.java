@@ -88,6 +88,8 @@ public final class StockContract {
         public static final String COLUMN_EMAIL_SUPPLIER = "email";
         public static final String COLUMN_SECTION = "section";
         public static final String COLUMN_PRICE = "price";
+        public static final String COLUMN_IMAGE = "image";
+
 
         /**
          * Possible values for the section of the stock2go (unknown, bread, cleaning materials, cosmetics, dairy products, dressings and sauces, electrical, frozen food, fruit, kitchen utensils, vegetables)
@@ -103,7 +105,6 @@ public final class StockContract {
         public static final int SECTION_FRUIT = 8;
         public static final int SECTION_KITCHEN_UTENSILS = 9;
         public static final int SECTION_VEGETABLES = 10;
-
 
         /**
          * Returns whether or not the given section is {@link #SECTION_UNKNOWN}, {@link #SECTION_FRUIT},

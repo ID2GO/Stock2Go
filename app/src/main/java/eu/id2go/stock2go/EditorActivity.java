@@ -15,6 +15,8 @@
  */
 package eu.id2go.stock2go;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -22,10 +24,14 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,6 +44,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -57,13 +64,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private static final int EXISTING_STOCK_LOADER = 0;
 
-//    name, brand, in stock, supplier, phone, e-mail, section, price
+    /**
+     * Identifier for read access
+     */
+    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+
+    /**
+     * Identifier for image loader
+     */
+    static final int REQUEST_STOCK_IMAGE = 0;
+
+//    name, brand, in stock, supplier, phone, e-mail, section, price, image
 
     /**
      * Instance variable
      * Content URI for the existing stock item loader
      */
     private Uri mCurrentStockItemUri;
+
+
 
     /**
      * EditText field to enter the stock item name
@@ -106,8 +125,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceEditText;
 
     /**
+     * ImageView field to show the stock item image
+     */
+    private ImageView mStockItemImageView;
+
+
+
+    /**
      * Image buttons
      */
+    ImageButton mGetStockItemImageBtn;
+
+    Uri actualImageUri;
+
     ImageButton mDecreaseStockQty;
     ImageButton mIncreaseStockQty;
 
@@ -166,7 +196,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
 
-        // Find all relevant views that we will need to read user input from
+        // Assign all fields to relevant views that we will need to read user input from
         mNameEditText = findViewById(R.id.edit_stock_item_name);
         mBrandEditText = findViewById(R.id.edit_stock_item_brand);
         mStockQtyEditText = findViewById(R.id.edit_stock_item_Qty);
@@ -176,10 +206,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText = findViewById(R.id.edit_stock_item_price);
         mSectionSpinner = findViewById(R.id.spinner_section);
 
+        mStockItemImageView = findViewById(R.id.stock_item_image_view);
+
         mDecreaseStockQty = findViewById(R.id.stock_qty_minus);
         mIncreaseStockQty = findViewById(R.id.stock_qty_plus);
+        mGetStockItemImageBtn = findViewById(R.id.get_image_button);
 
-        // Checking on changes in edit fields to avoid data loss by accidental closing
+        // Attaching a TouchListener & Checking on changes in edit fields to avoid data loss by accidental closing
         mNameEditText.setOnTouchListener(mTouchListener);
         mBrandEditText.setOnTouchListener(mTouchListener);
         mStockQtyEditText.setOnTouchListener(mTouchListener);
@@ -188,6 +221,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mEmailSupplierEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mSectionSpinner.setOnTouchListener(mTouchListener);
+
+        mStockItemImageView.setOnTouchListener(mTouchListener);
 
         mDecreaseStockQty.setOnClickListener(new View.OnClickListener() {
             /**
@@ -211,6 +246,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             @Override
             public void onClick(View v) {
                 plusOneToStockQty();
+                mStockItemHasChanged = true;
+            }
+        });
+
+        mGetStockItemImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tryToOpenImageSelector();
                 mStockItemHasChanged = true;
             }
         });
@@ -301,13 +344,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String phoneSupplier = mPhoneSupplierEditText.getText().toString().trim();
         String emailSupplier = mEmailSupplierEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        // Section is left out because of spinner values
+        String stockItemImage = mStockItemImageView.setImageURI();
+
+        String imageUri = mGetStockItemImageBtn.toString();
+        // Section is left out because of spinner pre-defined values
 
 
-        if (mCurrentStockItemUri == null && (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(brandString) ||
-                TextUtils.isEmpty(stockQtyString) || TextUtils.isEmpty(nameSupplier) ||
-                TextUtils.isEmpty(phoneSupplier) || TextUtils.isEmpty(emailSupplier) ||
-                TextUtils.isEmpty(priceString))) {
+        if (mCurrentStockItemUri == null && (TextUtils.isEmpty(nameString) ||
+                TextUtils.isEmpty(brandString) || TextUtils.isEmpty(stockQtyString) ||
+                TextUtils.isEmpty(nameSupplier) || TextUtils.isEmpty(phoneSupplier) ||
+                TextUtils.isEmpty(emailSupplier) || TextUtils.isEmpty(priceString) ||
+                TextUtils.isEmpty(stockItemImage) || TextUtils.isEmpty(imageUri))) {
 
             Toast.makeText(this, getString(R.string.toast_error_editor_empty_fields), Toast.LENGTH_SHORT).show();
             return;
@@ -328,6 +375,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, emailSupplier);
         values.put(StockItemEntry.COLUMN_SECTION, mSection);
         values.put(StockItemEntry.COLUMN_PRICE, price);
+        values.put(StockItemEntry.COLUMN_IMAGE, imageUri);
 
 
         // Determine if this is a new or existing stock item by checking if mCurrentStockItemUri is null or not
@@ -526,7 +574,61 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         alertDialog.show();
     }
 
+    public void tryToOpenImageSelector() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            return;
+        }
+        openImageSelector();
+    }
 
+    private void openImageSelector() {
+        Intent intent;
+        if (Build.VERSION.SDK_INT < 19) {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+        } else {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select picture"), REQUEST_STOCK_IMAGE);
+    }
+
+    @Override
+    public void onRequestPermissionResult(int requestCode,
+                                          String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission granted
+                    openImageSelector();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        // The ACTION_OPEN_DOCUMENT intent was sent with the request code READ_REQUEST_CODE.
+        // If the request code seen here doesn't match, it's the response to some other intent,
+        // and the below code shouldn't run at all.
+
+        if (requestCode == REQUEST_STOCK_IMAGE && resultCode == Activity.RESULT_OK) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.  Pull that uri using "resultData.getData()"
+
+            if (resultCode != null) {
+
+            }
+
+        }
+    }
     /**
      * Instantiate and return a new Loader for the given ID.
      *
@@ -546,7 +648,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 StockItemEntry.COLUMN_PHONE_SUPPLIER,
                 StockItemEntry.COLUMN_EMAIL_SUPPLIER,
                 StockItemEntry.COLUMN_SECTION,
-                StockItemEntry.COLUMN_PRICE};
+                StockItemEntry.COLUMN_PRICE,
+                StockItemEntry.COLUMN_IMAGE};
 
         // Perform a query on the provider using the ContentResolver.
         // Use the {@link StockItemEntry#CONTENT_URI} to access the stock item data.
@@ -610,6 +713,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int emailSupplierColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_EMAIL_SUPPLIER);
             int sectionColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_SECTION);
             int priceColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_PRICE);
+            int imageColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_IMAGE);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
@@ -620,6 +724,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String emailSupplier = cursor.getString(emailSupplierColumnIndex);
             int section = cursor.getInt(sectionColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
+            String image = cursor.getString(imageColumnIndex);
 
             mNameEditText.setText(name);
             mBrandEditText.setText(brand);
@@ -628,6 +733,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mPhoneSupplierEditText.setText(phoneSupplier);
             mEmailSupplierEditText.setText(emailSupplier);
             mPriceEditText.setText(Integer.toString(price));
+            mStockItemImageView.setImageURI(image);
 
             // Section is a dropdown spinner, so ma the constant value from the database
             // into one of the dropdown options (0 == Unknown, 1 == FRUIT, 2 == VEGETABLES).
@@ -691,6 +797,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPhoneSupplierEditText.setText("");
         mEmailSupplierEditText.setText("");
         mPriceEditText.setText("");
+        mStockItemImageView.setImageURI();
+//        mStockItemImageView.setImageURI();
         mSectionSpinner.setSelection(0); // By default, set section to "Unknown"
     }
 
