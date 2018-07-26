@@ -53,7 +53,7 @@ public class StockCursorAdapter extends CursorAdapter {
      * @param view    Existing view, returned earlier by newView() method
      * @param context app context
      * @param cursor  The cursor from which to get the data. The cursor is already moved to the
-     *                correct row
+     *                correct row.
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
