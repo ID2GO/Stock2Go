@@ -130,6 +130,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private ImageView mStockItemImageView;
 
 
+    private Uri imageUri;
+
 
     /**
      * Image buttons
@@ -164,7 +166,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -344,16 +345,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String phoneSupplier = mPhoneSupplierEditText.getText().toString().trim();
         String emailSupplier = mEmailSupplierEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        String stockItemImage = mStockItemImageView.toString();
+        //String stockItemImage = mStockItemImageView.toString();//???? wat moet dit doen? wat dit doet is een VIEW (niet de inhoud)
+        String imageUriString;                                      // als string weergeven, wat niet zo heel nuttig is voor de database
+        if (imageUri != null) {
+            imageUriString = imageUri.toString();
+        } else {
+            imageUriString = "";
+        }
 
-        String imageUri = mGetStockItemImageBtn.toString();
 
 
         if (mCurrentStockItemUri == null && (TextUtils.isEmpty(nameString) ||
                 TextUtils.isEmpty(brandString) || TextUtils.isEmpty(stockQtyString) ||
                 TextUtils.isEmpty(nameSupplier) || TextUtils.isEmpty(phoneSupplier) ||
                 TextUtils.isEmpty(emailSupplier) || TextUtils.isEmpty(priceString) ||
-                TextUtils.isEmpty(stockItemImage) || TextUtils.isEmpty(imageUri))) {
+                TextUtils.isEmpty(imageUriString))) {
 
             Toast.makeText(this, getString(R.string.toast_error_editor_empty_fields), Toast.LENGTH_SHORT).show();
             return;
@@ -374,7 +380,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, emailSupplier);
         values.put(StockItemEntry.COLUMN_SECTION, mSection);
         values.put(StockItemEntry.COLUMN_PRICE, price);
-        values.put(StockItemEntry.COLUMN_IMAGE, stockItemImage);
+        values.put(StockItemEntry.COLUMN_IMAGE, imageUriString);
 
 
         // Determine if this is a new or existing stock item by checking if mCurrentStockItemUri is null or not
@@ -624,11 +630,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // provided to this method as a parameter.  Pull that uri using "resultData.getData()"
 
             if (resultData != null) {
-                mCurrentStockItemUri = resultData.getData();
-                Log.i(LOG_TAG, "Uri: " + mCurrentStockItemUri.toString());
+                imageUri = resultData.getData();
+                Log.i(LOG_TAG, "Uri: " + imageUri.toString());
 
 
-                mStockItemImageView.setImageURI(mCurrentStockItemUri);
+                mStockItemImageView.setImageURI(imageUri);
 //                mStockItemImageView.invalidate();
 
             }

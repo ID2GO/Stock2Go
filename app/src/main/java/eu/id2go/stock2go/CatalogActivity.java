@@ -119,7 +119,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, "info@gero.nl");
         values.put(StockItemEntry.COLUMN_SECTION, StockItemEntry.SECTION_KITCHEN_UTENSILS);
         values.put(StockItemEntry.COLUMN_PRICE, 17);
-        values.put(StockItemEntry.COLUMN_IMAGE, "android.resource://eu.id2go.stock2go/drawable/knife");
+        values.put(StockItemEntry.COLUMN_IMAGE, "android.resource://eu.id2go.stock2go/drawable/kaas.jpg");
 
         // Insert a new row of dummy data in the database, returning the ID of that new row.
         // The first argument for db.insert() is the stock2go table name.

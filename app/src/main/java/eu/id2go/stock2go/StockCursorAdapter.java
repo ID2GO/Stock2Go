@@ -61,7 +61,7 @@ public class StockCursorAdapter extends CursorAdapter {
         // Find fields to populate in inflated template
         TextView nameTextView = view.findViewById(R.id.name);
         TextView summaryTextView = view.findViewById(R.id.summary);
-        ImageView image = view.findViewById(R.id.get_image_button);
+        ImageView image = view.findViewById(R.id.list_item_image_view);
         // Extract properties from cursor
         int nameColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_NAME);
         int brandColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_BRAND);
