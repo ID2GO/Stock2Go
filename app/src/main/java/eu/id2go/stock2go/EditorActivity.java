@@ -58,7 +58,7 @@ import eu.id2go.stock2go.data.StockContract.StockItemEntry;
 
 import static eu.id2go.stock2go.data.StockProvider.LOG_TAG;
 
-//import eu.id2go.stock2go.data.StockContract;
+//  import eu.id2go.stock2go.data.StockContract;
 
 /**
  * Allows user to create a new stock item or edit an existing one.
@@ -80,7 +80,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     static final int PICK_IMAGE_REQUEST = 0;
 
-//    name, brand, in stock, supplier, phone, e-mail, section, price, image
+//  databaseUri, imageUri name, brand, # in stock, supplier, phone, e-mail, section, price, image
 
     /**
      * Instance variable
@@ -88,7 +88,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private Uri mCurrentStockItemUri;
 
-
+    /**
+     * Instance variable
+     * Content URI for the existing image loader
+     */
+    private Uri imageUri;
 
     /**
      * EditText field to enter the stock item name
@@ -135,18 +139,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private ImageView mStockItemImageView;
 
-
-    private Uri imageUri;
-
-
     /**
-     * Image buttons
+     * Image button acquire image
      */
     ImageButton mGetStockItemImageBtn;
 
-
+    /**
+     * Image button decrease quantity in stock
+     */
     ImageButton mDecreaseStockQty;
+
+    /**
+     * Image button increase quantity in stock
+     */
     ImageButton mIncreaseStockQty;
+
 
     /**
      * Section of the stock item. The possible valid values are in the StockContract.java file:
@@ -160,7 +167,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private boolean mStockItemHasChanged = false;
 
-
     // OnTouchListener that listens for any user touches on a View, implying that they are modifying
     // the view, and we change the mStockItemHasChanged boolean to true.
 
@@ -172,6 +178,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,6 +226,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mIncreaseStockQty = findViewById(R.id.stock_qty_plus);
 
 
+
         // Attaching a TouchListener & Checking on changes in edit fields to avoid data loss by accidental closing
         mNameEditText.setOnTouchListener(mTouchListener);
         mBrandEditText.setOnTouchListener(mTouchListener);
@@ -264,8 +272,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 mStockItemHasChanged = true;
             }
         });
-
-
 
 
         setupSpinner();
@@ -351,14 +357,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String phoneSupplier = mPhoneSupplierEditText.getText().toString().trim();
         String emailSupplier = mEmailSupplierEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        //String stockItemImage = mStockItemImageView.toString();//???? wat moet dit doen? wat dit doet is een VIEW (niet de inhoud)
-        String imageUriString;                                      // als string weergeven, wat niet zo heel nuttig is voor de database
+
+        String imageUriString;
         if (imageUri != null) {
             imageUriString = imageUri.toString();
         } else {
             imageUriString = "";
         }
-
 
 
         if (mCurrentStockItemUri == null && (TextUtils.isEmpty(nameString) ||
@@ -367,59 +372,60 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 TextUtils.isEmpty(emailSupplier) || TextUtils.isEmpty(priceString) ||
                 TextUtils.isEmpty(imageUriString))) {
 
-            Toast.makeText(this, getString(R.string.toast_error_editor_empty_fields), Toast.LENGTH_SHORT).show();
-            return;
-        }
+            Toast.makeText(this, getString(R.string.toast_error_editor_empty_fields), Toast.LENGTH_LONG).show();
+//            return;
 
-        int price = 0;
-        if (!TextUtils.isEmpty(priceString)) {
-            price = Integer.parseInt(priceString);
-        }
-
-        //  Create a ContentValues object using key value pairs where the key is the name column and the value is the name from the EditText field
-        ContentValues values = new ContentValues();
-        values.put(StockItemEntry.COLUMN_NAME, nameString);
-        values.put(StockItemEntry.COLUMN_BRAND, brandString);
-        values.put(StockItemEntry.COLUMN_STOCK_QTY, stockQtyString);
-        values.put(StockItemEntry.COLUMN_NAME_SUPPLIER, nameSupplier);
-        values.put(StockItemEntry.COLUMN_PHONE_SUPPLIER, phoneSupplier);
-        values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, emailSupplier);
-        values.put(StockItemEntry.COLUMN_SECTION, mSection);
-        values.put(StockItemEntry.COLUMN_PRICE, price);
-        values.put(StockItemEntry.COLUMN_IMAGE, imageUriString);
-
-
-        // Determine if this is a new or existing stock item by checking if mCurrentStockItemUri is null or not
-        if (mCurrentStockItemUri == null) {
-            // This is a NEW stock item, so insert a new stock item into the provider,
-            // returning the content URI for the new stock item.
-            Uri newUri = getContentResolver().insert(StockItemEntry.CONTENT_URI, values);
-
-            // Show a toast message depending on whether or not the insertion was successful.
-            if (newUri == null) {
-                // If the new content URI is null, then there was an error with insertion.
-                Toast.makeText(this, getString(R.string.toast_error_editor_inserting_stock_item_data), Toast.LENGTH_SHORT).show();
-            } else {
-                // Otherwise, the insertion was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.toast_success_editor_inserting_stock_item_data), Toast.LENGTH_SHORT).show();
-            }
         } else {
-            // Otherwise this is an EXISTING stock item, so update the stock item with content URI: mCurrentStockItemUri
-            // and pass in the new ContentValues. Pass in null for the selection and selection args
-            // because mCurrentStockItemUri will already identify the correct row in the database that
-            // we want to modify.
-            int rowsAffected = getContentResolver().update(mCurrentStockItemUri, values, null, null);
-            // Show a toast message depending on whether or not the update was successful.
-            if (rowsAffected == 0) {
-                // If no rows were affected, then there was an error with the update.
-                Toast.makeText(this, getString(R.string.toast_error_editor_updating_stock_item_data),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                // Otherwise, the update was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.toast_success_editor_updating_stock_item_data),
-                        Toast.LENGTH_SHORT).show();
+
+            int price = 0;
+            if (!TextUtils.isEmpty(priceString)) {
+                price = Integer.parseInt(priceString);
             }
 
+            //  Create a ContentValues object using key value pairs where the key is the name column and the value is the name from the EditText field
+            ContentValues values = new ContentValues();
+            values.put(StockItemEntry.COLUMN_NAME, nameString);
+            values.put(StockItemEntry.COLUMN_BRAND, brandString);
+            values.put(StockItemEntry.COLUMN_STOCK_QTY, stockQtyString);
+            values.put(StockItemEntry.COLUMN_NAME_SUPPLIER, nameSupplier);
+            values.put(StockItemEntry.COLUMN_PHONE_SUPPLIER, phoneSupplier);
+            values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, emailSupplier);
+            values.put(StockItemEntry.COLUMN_SECTION, mSection);
+            values.put(StockItemEntry.COLUMN_PRICE, price);
+            values.put(StockItemEntry.COLUMN_IMAGE, imageUriString);
+
+
+            // Determine if this is a new or existing stock item by checking if mCurrentStockItemUri is null or not
+            if (mCurrentStockItemUri == null) {
+                // This is a NEW stock item, so insert a new stock item into the provider,
+                // returning the content URI for the new stock item.
+                Uri newUri = getContentResolver().insert(StockItemEntry.CONTENT_URI, values);
+
+                // Show a toast message depending on whether or not the insertion was successful.
+                if (newUri == null) {
+                    // If the new content URI is null, then there was an error with insertion.
+                    Toast.makeText(this, getString(R.string.toast_error_editor_inserting_stock_item_data), Toast.LENGTH_SHORT).show();
+                } else {
+                    // Otherwise, the insertion was successful and we can display a toast.
+                    Toast.makeText(this, getString(R.string.toast_success_editor_inserting_stock_item_data), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // Otherwise this is an EXISTING stock item, so update the stock item with content URI: mCurrentStockItemUri
+                // and pass in the new ContentValues. Pass in null for the selection and selection args
+                // because mCurrentStockItemUri will already identify the correct row in the database that
+                // we want to modify.
+                int rowsAffected = getContentResolver().update(mCurrentStockItemUri, values, null, null);
+                // Show a toast message depending on whether or not the update was successful.
+                if (rowsAffected == 0) {
+                    // If no rows were affected, then there was an error with the update.
+                    Toast.makeText(this, getString(R.string.toast_error_editor_updating_stock_item_data),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    // Otherwise, the update was successful and we can display a toast.
+                    Toast.makeText(this, getString(R.string.toast_success_editor_updating_stock_item_data),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
@@ -475,7 +481,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     // Navigate back to parent activity (CatalogActivity)
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
                     return true;
-                }
+                } else {
                 // Otherwise if there are unsaved changes, setup a dialog to warn the user.
                 // Create a click listener to handle the user confirming that
                 // changes should be discarded.
@@ -488,11 +494,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
                             }
                         };
-                // Show a dialog that notifies the user they have unsaved changes
+                // A dialog that handles notifying the user they have unsaved changes is the {showUnsavedChangesDialog()}
                 showUnsavedChangesDialog(discardButtonClickListener);
                 Log.e(LOG_TAG, getString(R.string.log_unsaved_changes_dialog));
 
                 return true;
+                }
         }
 
 
@@ -590,7 +597,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
             return;
         }
@@ -699,6 +706,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         }
     }
+
     /**
      * Instantiate and return a new Loader for the given ID.
      *

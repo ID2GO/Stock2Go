@@ -34,7 +34,7 @@
 
     <!-- Log messages for testing purposes in dev. mode-->
     <string name="log_prepared_options_menu">onPrepareOptionsMenu setting delete button visibility false</string>
-    <string name="log_unsaved_changes_dialog">Warning unsaved changes to be discarded</string>
+    <string name="log_unsaved_changes_dialog">Warning unsaved changes will be discarded</string>
     <string name="error_inserting_new_row">Failed to insert row for: <xliff:g exemple="4" id="Stock item_in_table_of_contents"> </xliff:g> </string>
 
 
@@ -76,6 +76,9 @@
     <!--Toast for dummy data-->
     <string name="toast_error_inserting_dummy_stock_item_data">Error while inserting dummy stock item info</string>
     <string name="toast_success_inserting_dummy_stock_item_data">Dummy stock item info successfully inserted</string>
+
+    <string name="toast_error_adding_item_to_cart">Error, product was not added to the cart</string>
+    <string name="toast_success_adding_item_to_cart">Product added to the cart</string>
 
     <!-- Warning empty edit fields -->
     <string name="toast_insert_stock_item_name">Please insert a stock item name</string>
@@ -127,7 +130,12 @@
     <string name="category_section">Section</string>
 
     <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
-    <string name="price">Price in €</string>
+    <string name="description_price">price</string>
+    <string name="price">Price in €<xliff:g exemple="4" id="Stock item_in_table_of_contents"> </xliff:g> </string>
+
+    <string name="product">Product:</string>
+    <string name="currency">Price in €</string>
+
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_stock_item_name">Name</string>
@@ -137,6 +145,8 @@
 
     <!-- Text hint for Quantity field in the editor [CHAR LIMIT=30] -->
     <string name="hint_stock_item_quantity"># in stock</string>
+
+    <string name="in_stock"># in stock</string>
 
     <!-- Text hint for Supplier field in the editor [CHAR LIMIT=30] -->
     <string name="hint_stock_item_supplier">Name of Supplier</string>

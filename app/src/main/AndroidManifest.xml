@@ -4,12 +4,16 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />     <!-- Permission till API 22 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- Permission till API 22 -->
     <uses-permission-sdk-23 android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission-sdk-23 android:name="android.permission.CALL_PHONE" />
+
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.Camera" android:required="true"/> <!-- Deprecated since API 21 -->
+
+    <uses-feature
+        android:name="android.hardware.Camera"
+        android:required="true" /> <!-- Deprecated since API 21 -->
     <uses-feature android:name="android.hardware.Camera.autofocus" />
 
     <application
@@ -20,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="eu.id2go.stock2go.CatalogActivity"
+            android:name=".CatalogActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,8 +33,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="eu.id2go.stock2go.EditorActivity"
-            android:parentActivityName="eu.id2go.stock2go.CatalogActivity"
+            android:name=".EditorActivity"
+            android:parentActivityName=".CatalogActivity"
             android:theme="@style/EditorTheme">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -40,11 +44,11 @@
         </activity>
 
         <provider
-            android:name="eu.id2go.stock2go.data.StockProvider"
+            android:name=".data.StockProvider"
             android:authorities="eu.id2go.stock2go"
             android:exported="false" />
 
-        <!--<activity android:name=".StockCursorAdapter"></activity>-->
+        <!-- <activity android:name=".StockCursorAdapter"></activity> -->
     </application>
 
 </manifest>

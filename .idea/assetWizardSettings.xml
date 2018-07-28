@@ -34,8 +34,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/Stock2Go/ic_camera_enhance_black_48dp.png" />
-                                      <entry key="outputName" value="ic_photo_camera_custom" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/Stock2Go/ic_shopping_basket_black_48dp.png" />
+                                      <entry key="outputName" value="ic_shopping_basket_custom" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="f0514b" />
                                     </map>

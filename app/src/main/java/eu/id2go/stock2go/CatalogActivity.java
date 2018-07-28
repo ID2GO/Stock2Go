@@ -75,6 +75,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         mCursorAdapter = new StockCursorAdapter(this, null);
         stockItemListView.setAdapter(mCursorAdapter);
 
+        /*
+         * Initializes the CursorLoader. The STOCK_Loader value is eventually passed to onCreateLoader().
+         */
+        getLoaderManager().initLoader(STOCK_LOADER, null, this);
+
         // Setup item click listener
         stockItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -96,22 +101,20 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);
             }
         });
-        /*
-         * Initializes the CursorLoader. The STOCK_Loader value is eventually passed to onCreateLoader().
-         */
-        getLoaderManager().initLoader(STOCK_LOADER, null, this);
+
     }
 
 
+
     /**
-     * Helper method to insert hardcoded stockItem data into the database. For debugging purposes only.
+     * Helper method to insert hardcoded stockItem dummy data into the database. For use as sample data and debugging purposes only.
      */
     private void insertStockItem() {
 
         // Create a ContentValues object where column names are the keys,
         // and dummy stockItem attributes are the values.
         ContentValues values = new ContentValues();
-        values.put(StockItemEntry.COLUMN_NAME, "Knife");
+        values.put(StockItemEntry.COLUMN_NAME, "Kitchen knife");
         values.put(StockItemEntry.COLUMN_BRAND, "Gero Young");
         values.put(StockItemEntry.COLUMN_STOCK_QTY, 12);
         values.put(StockItemEntry.COLUMN_NAME_SUPPLIER, "Gero");
@@ -119,7 +122,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(StockItemEntry.COLUMN_EMAIL_SUPPLIER, "info@gero.nl");
         values.put(StockItemEntry.COLUMN_SECTION, StockItemEntry.SECTION_KITCHEN_UTENSILS);
         values.put(StockItemEntry.COLUMN_PRICE, 17);
-        values.put(StockItemEntry.COLUMN_IMAGE, "android.resource://eu.id2go.stock2go/drawable/kaas.jpg");
+        values.put(StockItemEntry.COLUMN_IMAGE, "android.resource://eu.id2go.stock2go/drawable/knife");
 
         // Insert a new row of dummy data in the database, returning the ID of that new row.
         // The first argument for db.insert() is the stock2go table name.

@@ -1,6 +1,8 @@
 package eu.id2go.stock2go;
 
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import eu.id2go.stock2go.data.StockContract.StockItemEntry;
 
@@ -56,31 +60,68 @@ public class StockCursorAdapter extends CursorAdapter {
      *                correct row.
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
 
         // Find fields to populate in inflated template
         TextView nameTextView = view.findViewById(R.id.name);
-        TextView summaryTextView = view.findViewById(R.id.summary);
+        TextView priceTextView = view.findViewById(R.id.price);
+        TextView quantityTextView = view.findViewById(R.id.quantity);
+        ImageButton buyItemBtn = view.findViewById(R.id.buy_btn);
         ImageView image = view.findViewById(R.id.list_item_image_view);
+
         // Extract properties from cursor
+        final int id = cursor.getInt(cursor.getColumnIndex(StockItemEntry._ID));
         int nameColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_NAME);
-        int brandColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_BRAND);
+        int priceColumnIndex = cursor.getColumnIndex(StockItemEntry.COLUMN_PRICE);
+        final int stockItemQty = cursor.getInt(cursor.getColumnIndex(StockItemEntry.COLUMN_STOCK_QTY));
 
         // Read the stock item attributes from the Cursor for the current stock
         String stockItemName = cursor.getString(nameColumnIndex);
-        String stockItemBrand = cursor.getString(brandColumnIndex);
+        String stockItemPrice = cursor.getString(priceColumnIndex);
+//        final String stockItemQty = cursor.getString(qtyColumnIndex);
+
 
         image.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndex(StockItemEntry.COLUMN_IMAGE))));
 
-                // If the stock item brand is empty string or null, then use some default text
-        // that says "Unknown brand", so the TextView isn't blank.
-        if (TextUtils.isEmpty(stockItemBrand)) {
-            stockItemBrand = context.getString(R.string.unknown_brand);
-        }
+
 
         // Populate or update TextViews with extracted stock item properties
         nameTextView.setText(stockItemName);
-        summaryTextView.setText(String.valueOf(stockItemBrand));
+        priceTextView.setText(String.valueOf(stockItemPrice));
+        quantityTextView.setText(String.valueOf(stockItemQty));
 
+
+        buyItemBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri mCurrentStockItemUri = ContentUris.withAppendedId(StockItemEntry.CONTENT_URI, id);
+                addToCart(context, mCurrentStockItemUri, stockItemQty);
+
+            }
+        });
+
+    }
+
+    private void addToCart(Context context, Uri uri, int stockItemQty) {
+        if (stockItemQty > 0) {
+            int newAvailableQuantityValue = stockItemQty - 1;
+
+            ContentValues values = new ContentValues();
+            values.put(StockItemEntry.COLUMN_STOCK_QTY, newAvailableQuantityValue);
+
+
+            int rowsAffected = context.getContentResolver().update(uri, values, null, null);
+
+            // Show a toast message depending on whether or not the update was successful.
+            if (rowsAffected == 0) {
+                // If no rows were affected, then there was an error with the update.
+                Toast.makeText(context, (R.string.toast_error_adding_item_to_cart), Toast.LENGTH_LONG).show();
+            } else {
+                // Otherwise, the update was successful and we can display a toast.
+                Toast.makeText(context, (R.string.toast_success_adding_item_to_cart), Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
     }
 }
