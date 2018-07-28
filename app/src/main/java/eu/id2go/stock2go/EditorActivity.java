@@ -804,6 +804,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int price = cursor.getInt(priceColumnIndex);
             String stockItemImage = cursor.getString(imageColumnIndex);
 
+
             mNameEditText.setText(name);
             mBrandEditText.setText(brand);
             mStockQtyEditText.setText(Integer.toString(stockQty));
@@ -811,6 +812,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mPhoneSupplierEditText.setText(phoneSupplier);
             mEmailSupplierEditText.setText(emailSupplier);
             mPriceEditText.setText(Integer.toString(price));
+            imageUri = Uri.parse(stockItemImage);
+
             mStockItemImageView.setImageURI(Uri.parse(stockItemImage));
 
             // Section is a dropdown spinner, so ma the constant value from the database

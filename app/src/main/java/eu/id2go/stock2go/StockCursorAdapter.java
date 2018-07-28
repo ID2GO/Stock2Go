@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +77,7 @@ public class StockCursorAdapter extends CursorAdapter {
         // Read the stock item attributes from the Cursor for the current stock
         String stockItemName = cursor.getString(nameColumnIndex);
         String stockItemPrice = cursor.getString(priceColumnIndex);
-//        final String stockItemQty = cursor.getString(qtyColumnIndex);
+        // final String stockItemQty = cursor.getString(qtyColumnIndex);
 
 
         image.setImageURI(Uri.parse(cursor.getString(cursor.getColumnIndex(StockItemEntry.COLUMN_IMAGE))));
