@@ -133,6 +133,10 @@
     <string name="description_price">price</string>
     <string name="price">Price in €<xliff:g exemple="4" id="Stock item_in_table_of_contents"> </xliff:g> </string>
 
+
+    <string name="description_empty_db_image">Database still empty, please populate it with data</string>
+
+
     <string name="product">Product:</string>
     <string name="currency">Price in €</string>
 

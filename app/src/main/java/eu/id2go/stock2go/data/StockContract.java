@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package eu.id2go.stock2go.data;
 
 import android.content.ContentResolver;
@@ -10,7 +25,7 @@ import android.provider.BaseColumns;
  * Inner class named: BlankEntry that implements BaseColumns for each table in the database
  * String constants for each of the headings in the database
  * Data related CONSTANTS are reusable components that do not change and that are for purpose of
- * identifacation WRITEN IN CAPS
+ * identification WRITTEN IN CAPS
  */
 public final class StockContract {
 
