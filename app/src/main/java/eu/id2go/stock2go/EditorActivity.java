@@ -812,6 +812,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mPhoneSupplierEditText.setText(phoneSupplier);
             mEmailSupplierEditText.setText(emailSupplier);
             mPriceEditText.setText(Integer.toString(price));
+
+            // This imageUri ensures that the string loading the image
+            // from the CatalogActivity into the EditorActivity is not empty!
             imageUri = Uri.parse(stockItemImage);
 
             mStockItemImageView.setImageURI(Uri.parse(stockItemImage));
